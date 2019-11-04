@@ -6,8 +6,9 @@
   <script type="module" src="app.js"></script>
 </head>
 <body>
-<h1>Cadastrar Usuario</h1>
-  <div>
+  <div id="main"></div>
+  <template id="cadastro">
+    <h1>Cadastrar Usuario</h1>
     <p>
       Primeiro Nome:
       <input id="newPrimeiroNome" type="text">
@@ -28,10 +29,22 @@
       Senha:
       <input id="newSenha" type="password">
     </p>
-
-      
+    
     <button id="create">Salvar</button>
-  </div>
+  </template>
+
+  <template id= "login">
+    <h1>Login</h1>
+    <p>
+      Email:
+      <input id="email" type="email">
+    </p>
+    <p>
+      Senha:
+      <input id="senha" type="password">
+    </p>
+    <button id="login">Logar</button>
+  </template>
 
 </body>
 </html>

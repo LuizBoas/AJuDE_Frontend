@@ -16,4 +16,23 @@ $createButton.addEventListener('click',
         .then(r => r.json())
         .then(r => {console.log(r)});
     }
+
+    
 );
+
+let $loginButton = document.querySelector("#login");
+$loginButton.addEventListener('click',
+    function logaUsuario() {
+        let email = document.querySelector("#email");
+        let senha = document.querySelector("#senha");
+        fetch("http://localhost:8080/auth/login", {
+            'method': 'POST',
+            'body': `{"email": "${email.value}","senha": "${senha.value}" }`,
+            'headers': {'Content-Type': 'application/json'}
+        })
+        .then(r => r.json())
+        .then(r => {console.log(r)});
+    }
+);
+
+
