@@ -1,14 +1,55 @@
 html {
     margin: 0;
     padding: 0;
-  }
-  body {
+}
+body {
     margin: 0;
     padding: 0;
     border: 1px solid red;
     height: 100vh;
-  }
-  header { border: 1px solid blue; }
-  #h1{
-    color: blueviolet;
-  }
+}
+header { border: 1px solid blue; }
+
+h1{
+  display: table;
+  margin-right: auto;
+  margin-left: auto;
+}
+footer { border: 1px solid blue; }
+
+#main{
+  display: table;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#menu ul{
+  margin: 0;
+  background-color: black;
+  list-style: none;
+}
+
+#menu ul li{
+  display: inline;
+
+}
+
+#menu ul li a{
+  padding: 10px 10px;
+  display: inline-block;
+
+  color: white;
+  text-decoration: none;
+}
+
+p{
+  display: table;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+button{
+  display: table;
+  margin-right: auto;
+  margin-left: auto;
+}
