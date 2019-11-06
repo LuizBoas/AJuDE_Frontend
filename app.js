@@ -17,7 +17,7 @@ async function fetch_status() {
   return data;
 }
 
-let template1, template2, template3;
+let template1, template2, template3, template4;
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
   let e = document.createElement("div");
@@ -25,6 +25,7 @@ async function fetch_templates() {
   template1 = e.querySelector('#cadastro');
   template2 = e.querySelector('#login');
   template3 = e.querySelector('#cadastroCampanha');
+  template4 = e.querySelector('#pesquisaCampanha');
 }
 
 let $menuLogin = document.querySelector('#viewLogin');
@@ -35,6 +36,10 @@ $menuCadastro.addEventListener('click', view1);
 
 let $menuCadastroCampanha = document.querySelector('#viewCadastroCampanha');
 $menuCadastroCampanha.addEventListener('click', view3);
+
+let $pesquisaCampanha = document.querySelector('#viewPesquisaCampanha');
+$menuPesquisaCampanha.addEventListener('click', view4);
+
 
 function view1(){
     let $template = template1;
@@ -106,6 +111,40 @@ function view3(){
             .then(r => {console.log(r)});
         }
     );
+
+}
+
+function createURL (text){       
+    text = text.toLowerCase();                                                         
+    text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
+    text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
+    text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
+    text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
+    text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
+    text = text.replace(new RegExp('[Ç]','gi'), 'c');
+    text = text.replace(new RegExp('[ ]','gi'), '-');
+    text = text.replace(new RegExp('[,]','gi'), '');
+    return text;                 
+}
+
+function view4(){
+    let $template = template4;
+    $main.innerHTML = $template.innerHTML;
+    
+    let $pesquisaButton = document.querySelector("#pesquisaCampanha");
+    $pesquisaButton.addEventListener('click', 
+        function pesquisaCampanha(){
+            let subString = document.querySelector("#newSubString")
+            fetch("http://localhost:8080/api/campanhas/subString", { /* modificar quando fazer o back, fazer o get tambem quanto fazer o back */
+                'method': 'POST',
+                'body': `{"subString": "${subString.value}"}`,
+                'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}
+            })
+            .then(r => r.json())
+            .then(r => {console.log(r)});
+        }
+    );
+    
 
 }
 
