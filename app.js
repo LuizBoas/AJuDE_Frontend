@@ -25,7 +25,6 @@ async function fetch_templates() {
   template1 = e.querySelector('#cadastro');
   template2 = e.querySelector('#login');
   template3 = e.querySelector('#cadastroCampanha');
-  template4 = e.querySelector('#pesquisaCampanha');
 }
 
 let $menuLogin = document.querySelector('#viewLogin');
@@ -36,9 +35,6 @@ $menuCadastro.addEventListener('click', view1);
 
 let $menuCadastroCampanha = document.querySelector('#viewCadastroCampanha');
 $menuCadastroCampanha.addEventListener('click', view3);
-
-let $pesquisaCampanha = document.querySelector('#viewPesquisaCampanha');
-$menuPesquisaCampanha.addEventListener('click', view4);
 
 
 function view1(){
@@ -84,8 +80,8 @@ function view2() {
                     'headers': {'Content-Type': 'application/json'}
                 })
                 .then(r => r.json())
-                .then(r => {token = r.token});
-                //.then(r => {window.console.log((r).token)});
+                .then(r => {token = r.token})
+                .then(r => {window.console.log(token)});
             }
         );
     let $a = document.querySelector('#link');
@@ -104,12 +100,16 @@ function view3(){
             let metaCampanha = document.querySelector("#newMetaCampanha");
             fetch("http://localhost:8080/api/campanhas", {
                 'method': 'POST',
-                'body': `{"nome": "${nomeCampanha.value}","descricao": "${descricaoCampanha.value}","meta": "${metaCampanha.value}"}`,
-                'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}
+                //'body': `{"nome": "${nomeCampanha.value}","descricao": "${descricaoCampanha.value}","meta": "${metaCampanha.value}"}`,
+                'body': JSON.stringify({"nome": nomeCampanha.value,"descricao": descricaoCampanha.valu,"meta": metaCampanha.value}),
+                'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${token}`}
             })
             .then(r => r.json())
             .then(r => {console.log(r)});
+            console.log({'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`});
         }
+
+        
     );
 
 }
@@ -127,26 +127,7 @@ function createURL (text){
     return text;                 
 }
 
-function view4(){
-    let $template = template4;
-    $main.innerHTML = $template.innerHTML;
-    
-    let $pesquisaButton = document.querySelector("#pesquisaCampanha");
-    $pesquisaButton.addEventListener('click', 
-        function pesquisaCampanha(){
-            let subString = document.querySelector("#newSubString")
-            fetch("http://localhost:8080/api/campanhas/subString", { /* modificar quando fazer o back, fazer o get tambem quanto fazer o back */
-                'method': 'POST',
-                'body': `{"subString": "${subString.value}"}`,
-                'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}
-            })
-            .then(r => r.json())
-            .then(r => {console.log(r)});
-        }
-    );
-    
 
-}
 
 /*POST /api/campanhas HTTP/1.1
 Host: localhost:8080
@@ -167,4 +148,43 @@ cache-control: no-cache
 	"descricao": "teste" ,
 	"meta": 1
 }
+*/
+/*
+function view4(){
+    let $template = template4;
+    $main.innerHTML = $template.innerHTML;
+    
+    let $pesquisaButton = document.querySelector("#pesquisaCampanha");
+    $pesquisaButton.addEventListener('click', 
+        function pesquisaCampanha(){
+            let subString = document.querySelector("#newSubString")
+            fetch("http://localhost:8080/api/campanhas/subString", { /* modificar quando fazer o back, fazer o get tambem quanto fazer o back */
+            'method': 'POST',
+            'body': `{"subString": "${subString.value}"}`,
+            'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token.value}`}
+        })
+        .then(r => r.json())
+        .then(r => {console.log(r)});
+    }
+);
+
+
+}
+
+
+
+
+
+let $pesquisaCampanha = document.querySelector('#viewPesquisaCampanha');
+$menuPesquisaCampanha.addEventListener('click', view4);
+
+template4 = e.querySelector('#pesquisaCampanha');
+
+
+localStorage.setItem("");
+
+localStorage
+
+pathname
+
 */
