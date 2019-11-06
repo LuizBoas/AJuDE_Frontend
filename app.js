@@ -62,7 +62,7 @@ function view1(){
     $a.addEventListener('click', view2);
 }
 
-let token = null;
+let token;
 
 function view2() {
     let $template = template2;
@@ -93,20 +93,39 @@ function view3(){
 
     let $cadastraButton = document.querySelector("#cadastraCampanha");
     $cadastraButton.addEventListener('click', 
-    function cadastraCampanha(){
-        let nomeCampanha = document.querySelector("#newNomeCampanha");
-        let descricaoCampanha = document.querySelector("#newDescricaoCampanha");
-        let metaCampanha = document.querySelector("#newMetaCampanha");
-        fetch("http://localhost:8080/api/campanhas", {
-                    'method': 'POST',
-                    'credentials': 'include',
-                    'body': `{"nome": "${nomeCampanha.value}","descricao": "${descricaoCampanha.value}", 
-                    "meta": "${metaCampanha.value}"}`,
-                    'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token.value}`}
-                })
-                .then(r => r.json())
-                .then(r => {console.log(r)});
+        function cadastraCampanha(){
+            let nomeCampanha = document.querySelector("#newNomeCampanha");
+            let descricaoCampanha = document.querySelector("#newDescricaoCampanha");
+            let metaCampanha = document.querySelector("#newMetaCampanha");
+            fetch("http://localhost:8080/api/campanhas", {
+                'method': 'POST',
+                'body': `{"nome": "${nomeCampanha.value}","descricao": "${descricaoCampanha.value}","meta": "${metaCampanha.value}"}`,
+                'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}
+            })
+            .then(r => r.json())
+            .then(r => {console.log(r)});
         }
     );
 
 }
+
+/*POST /api/campanhas HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQUBBQSIsImV4cCI6MTU3MzA2MTc5OH0.3doDZdwhgoS5SIkgaMqG24gwAKEfqYjs3iHvccHgoeKjJPtuAJ-dlCjoF5Lx-zSt-oV2F5oQ_vXssJHbF1G-NQ
+User-Agent: PostmanRuntime/7.19.0
+Accept:
+Cache-Control: no-cache
+Postman-Token: f955838f-00c8-4a78-8eb0-02cf565b6c8e,16cb0bba-63e9-418f-ad54-8350e4ec7868
+Host: localhost:8080
+Accept-Encoding: gzip, deflate
+Content-Length: 69
+Connection: keep-alive
+cache-control: no-cache
+
+{
+	"nome": "testerrraaaddaeee", 
+	"descricao": "teste" ,
+	"meta": 1
+}
+*/
