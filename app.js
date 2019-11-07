@@ -1,29 +1,17 @@
 let $main = document.querySelector('#main');
-//localStorage.setItem("token", "token");
-(async function main() {
-    let data = await Promise.all([fetch_status(), fetch_templates()]);
-    // roteamento
-    // let hash = location.hash;
-    // if (["", "#view1"].includes(hash)) {
-    //   view1();
-    // } else if (["#view2"].includes(hash)) {
-    //   view2();
-    // } 
-  }());
 
-async function fetch_status() {
-  let data = await (fetch('api/status').then(r => r.json()));
-  return data;
-}
+(async function main() {
+    let data = await Promise.resolve(fetch_templates());
+  }());
 
 let template1, template2, template3, template4;
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
   let e = document.createElement("div");
   e.innerHTML = html_templates;
-  template1 = e.querySelector('#cadastro');
-  template2 = e.querySelector('#login');
-  template3 = e.querySelector('#cadastroCampanha');
+  template1 = e.querySelector('#cadastroDeUsuarios');
+  template2 = e.querySelector('#loginDoUsuario');
+  template3 = e.querySelector('#cadastroDeCampanhas');
 }
 
 let $menuLogin = document.querySelector('#viewLogin');
@@ -35,19 +23,18 @@ $menuCadastro.addEventListener('click', view1);
 let $menuCadastroCampanha = document.querySelector('#viewCadastroCampanha');
 $menuCadastroCampanha.addEventListener('click', view3);
 
-
 function view1(){
     let $template = template1;
     $main.innerHTML = $template.innerHTML;
 
-    let $createButton = document.querySelector("#create");
+    let $createButton = document.querySelector("#view1Button");
         $createButton.addEventListener('click', 
             function cadastraUsuario() {
-                let primeiroNome = document.querySelector("#newPrimeiroNome");
-                let email = document.querySelector("#newEmail");
-                let ultimoNome = document.querySelector("#newUltimoNome");
-                let cartaoCredito = document.querySelector("#newCartaoCredito");
-                let senha = document.querySelector("#newSenha");
+                let primeiroNome = document.querySelector("#view1PrimeiroNome");
+                let email = document.querySelector("#view1Email");
+                let ultimoNome = document.querySelector("#view1UltimoNome");
+                let cartaoCredito = document.querySelector("#view1CartaoCredito");
+                let senha = document.querySelector("#view1Senha");
                 fetch("http://localhost:8080/api/usuarios", {
                     'method': 'POST',
                     'body': `{"email": "${email.value}","primeiroNome": "${primeiroNome.value}","ultimoNome": "${ultimoNome.value}",
@@ -55,33 +42,31 @@ function view1(){
                     'headers': {'Content-Type': 'application/json'}
                 })
                 .then(r => r.json())
-                .then(r => {console.log(r)});
+                .then(r => {console.log(r)}) //fins de visualizacao
+                .then(alert("Usuario Cadastrado")); //fins de visualizacao
             }
         );
     let $a = document.querySelector('#link');
     $a.addEventListener('click', view2);
 }
 
-//let token1;
-
 function view2() {
     let $template = template2;
     $main.innerHTML = $template.innerHTML;
 
-    let $loginButton = document.querySelector("#login");
+    let $loginButton = document.querySelector("#view2Button");
         $loginButton.addEventListener('click',
             function logaUsuario() {
-                let email = document.querySelector("#email");
-                let senha = document.querySelector("#senha");
+                let email = document.querySelector("#view2Email");
+                let senha = document.querySelector("#view2Senha");
                 fetch("http://localhost:8080/auth/login", {
                     'method': 'POST',
                     'body': `{"email": "${email.value}","senha": "${senha.value}" }`,
                     'headers': {'Content-Type': 'application/json'}
                 })
                 .then(r => r.json())
-                .then(r => {localStorage.setItem("token", r.token)});
-                //.then(r => {token1 = r.token})
-                //.then(r => {window.console.log(token1)});
+                .then(r => {localStorage.setItem("token", r.token)})
+                .then(alert("Login Efetuado")); //fins de visualizacao
             }
         );
     let $a = document.querySelector('#link');
@@ -92,28 +77,30 @@ function view3(){
     let $template = template3;
     $main.innerHTML = $template.innerHTML;
 
-    let $cadastraButton = document.querySelector("#cadastraCampanha");
+    let $cadastraButton = document.querySelector("#view3Button");
     $cadastraButton.addEventListener('click', 
         function cadastraCampanha(){
-            let nomeCampanha = document.querySelector("#newNomeCampanha");
-            let descricaoCampanha = document.querySelector("#newDescricaoCampanha");
-            let metaCampanha = document.querySelector("#newMetaCampanha");
-            let dataCampanha = document.querySelector("#newDataCampanha");
+            let nomeCampanha = document.querySelector("#view3NomeCampanha");
+            let descricaoCampanha = document.querySelector("#view3DescricaoCampanha");
+            let metaCampanha = document.querySelector("#view3MetaCampanha");
+            let dataCampanha = document.querySelector("#view3DataCampanha");
+            let urlCampanha = createURL(nomeCampanha.value);
             fetch("http://localhost:8080/api/campanhas", {
                 'method': 'POST',
                 //'body': `{"nome": "${nomeCampanha.value}","descricao": "${descricaoCampanha.value}","meta": "${metaCampanha.value}"}`,
-                'body': JSON.stringify({"nome": nomeCampanha.value,"descricao": descricaoCampanha.value,"meta": metaCampanha.value,"data": dataCampanha.value}),
+                'body': JSON.stringify({"nome": nomeCampanha.value,"descricao": descricaoCampanha.value,
+                "meta": metaCampanha.value,"data": dataCampanha.value,"url": urlCampanha.value}),
                 'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
             })
             .then(r => r.json())
-            .then(r => {console.log(r)});
-            //console.log({'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.token}`});
+            .then(r => {console.log(r)}) //fins de visualizacao
+            .then(alert("Campanha Criada")); //fins de visualizacao
         }
     );
 }
 
-function createURL (text){       
-    text = text.toLowerCase();                                                         
+function createURL (text){     
+    text = text.toLowerCase();                                                           
     text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
     text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
     text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
@@ -124,26 +111,3 @@ function createURL (text){
     text = text.replace(new RegExp('[,]','gi'), '');
     return text;                 
 }
-
-
-
-/*POST /api/campanhas HTTP/1.1
-Host: localhost:8080
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQUBBQSIsImV4cCI6MTU3MzA2MTc5OH0.3doDZdwhgoS5SIkgaMqG24gwAKEfqYjs3iHvccHgoeKjJPtuAJ-dlCjoF5Lx-zSt-oV2F5oQ_vXssJHbF1G-NQ
-User-Agent: PostmanRuntime/7.19.0
-Accept:
-Cache-Control: no-cache
-Postman-Token: f955838f-00c8-4a78-8eb0-02cf565b6c8e,16cb0bba-63e9-418f-ad54-8350e4ec7868
-Host: localhost:8080
-Accept-Encoding: gzip, deflate
-Content-Length: 69
-Connection: keep-alive
-cache-control: no-cache
-
-{
-	"nome": "testerrraaaddaeee", 
-	"descricao": "teste" ,
-	"meta": 1
-}
-*/
