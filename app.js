@@ -1,10 +1,10 @@
 let $main = document.querySelector('#main');
-
+let $subMain = document.querySelector('#subMain');
 (async function main() {
     let data = await Promise.resolve(fetch_templates());
   }());
 
-let template1, template2, template3, template4;
+let template1, template2, template3, template4, template5;
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
   let e = document.createElement("div");
@@ -12,6 +12,8 @@ async function fetch_templates() {
   template1 = e.querySelector('#cadastroDeUsuarios');
   template2 = e.querySelector('#loginDoUsuario');
   template3 = e.querySelector('#cadastroDeCampanhas');
+  template4 = e.querySelector('#pesquisaCampanhas');
+  template5 = e.querySelector('#campanhas');
 }
 
 let $menuLogin = document.querySelector('#viewLogin');
@@ -22,6 +24,9 @@ $menuCadastro.addEventListener('click', view1);
 
 let $menuCadastroCampanha = document.querySelector('#viewCadastroCampanha');
 $menuCadastroCampanha.addEventListener('click', view3);
+
+let $menuPesquisaCampanha = document.querySelector('#viewPesquisaCampanha');
+$menuPesquisaCampanha.addEventListener('click', view4);
 
 function view1(){
     let $template = template1;
@@ -89,15 +94,35 @@ function view3(){
                 'method': 'POST',
                 //'body': `{"nome": "${nomeCampanha.value}","descricao": "${descricaoCampanha.value}","meta": "${metaCampanha.value}"}`,
                 'body': JSON.stringify({"nome": nomeCampanha.value,"descricao": descricaoCampanha.value,
-                "meta": metaCampanha.value,"data": dataCampanha.value,"url": urlCampanha.value}),
+                "meta": metaCampanha.value,"data": dataCampanha.value,"url": urlCampanha}),
                 'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
             })
             .then(r => r.json())
+            .then(console.log(dataCampanha.value))
             .then(r => {console.log(r)}) //fins de visualizacao
             .then(alert("Campanha Criada")); //fins de visualizacao
         }
     );
 }
+
+function view4(){
+    let $template = template4;
+    $main.innerHTML = $template.innerHTML;
+
+    let $pesquisaButton = document.querySelector("#view4Button");
+    $pesquisaButton.addEventListener('click', 
+        function pesquisaCampanhas(){
+            let nome = document.querySelector('#view4Substring');
+            fetch(`http://localhost:8080/api/campanhas/pesquisar/${nome.value}`,{
+                'method':'GET',
+                'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+            })
+            .then(r =>r.json())
+            .then(r => {console.log(r)})
+        }
+    );
+}
+
 
 function createURL (text){     
     text = text.toLowerCase();                                                           
