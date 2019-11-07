@@ -1,15 +1,14 @@
-
 let $main = document.querySelector('#main');
-
+//localStorage.setItem("token", "token");
 (async function main() {
     let data = await Promise.all([fetch_status(), fetch_templates()]);
     // roteamento
-    let hash = location.hash;
-    if (["", "#view1"].includes(hash)) {
-      view1();
-    } else if (["#view2"].includes(hash)) {
-      view2();
-    } 
+    // let hash = location.hash;
+    // if (["", "#view1"].includes(hash)) {
+    //   view1();
+    // } else if (["#view2"].includes(hash)) {
+    //   view2();
+    // } 
   }());
 
 async function fetch_status() {
@@ -63,7 +62,7 @@ function view1(){
     $a.addEventListener('click', view2);
 }
 
-let token;
+//let token1;
 
 function view2() {
     let $template = template2;
@@ -80,8 +79,9 @@ function view2() {
                     'headers': {'Content-Type': 'application/json'}
                 })
                 .then(r => r.json())
-                .then(r => {token = r.token})
-                .then(r => {window.console.log(token)});
+                .then(r => {localStorage.setItem("token", r.token)});
+                //.then(r => {token1 = r.token})
+                //.then(r => {window.console.log(token1)});
             }
         );
     let $a = document.querySelector('#link');
@@ -98,20 +98,18 @@ function view3(){
             let nomeCampanha = document.querySelector("#newNomeCampanha");
             let descricaoCampanha = document.querySelector("#newDescricaoCampanha");
             let metaCampanha = document.querySelector("#newMetaCampanha");
+            let dataCampanha = document.querySelector("#newDataCampanha");
             fetch("http://localhost:8080/api/campanhas", {
                 'method': 'POST',
                 //'body': `{"nome": "${nomeCampanha.value}","descricao": "${descricaoCampanha.value}","meta": "${metaCampanha.value}"}`,
-                'body': JSON.stringify({"nome": nomeCampanha.value,"descricao": descricaoCampanha.valu,"meta": metaCampanha.value}),
-                'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${token}`}
+                'body': JSON.stringify({"nome": nomeCampanha.value,"descricao": descricaoCampanha.value,"meta": metaCampanha.value,"data": dataCampanha.value}),
+                'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
             })
             .then(r => r.json())
             .then(r => {console.log(r)});
-            console.log({'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`});
+            //console.log({'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.token}`});
         }
-
-        
     );
-
 }
 
 function createURL (text){       
