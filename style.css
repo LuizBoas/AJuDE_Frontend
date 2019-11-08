@@ -7,6 +7,7 @@ body {
     padding: 0;
     border: 1px solid red;
     height: 100vh;
+  
 }
 header { border: 1px solid blue; }
 
@@ -15,6 +16,7 @@ h1{
   margin-right: auto;
   margin-left: auto;
 }
+
 footer { border: 1px solid blue; }
 
 #main{
@@ -53,3 +55,14 @@ button{
   margin-right: auto;
   margin-left: auto;
 }
+
+div#banner {
+  margin: 0 auto;
+  padding: 0;
+  width: 4000px;
+  height: 200px;
+  background: url('../c.png') no-repeat left bottom;
+
+}
+
+
