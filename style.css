@@ -5,11 +5,11 @@ html {
 body {
     margin: 0;
     padding: 0;
-    border: 1px solid red;
+    border: 1px;
     height: 100vh;
   
 }
-header { border: 1px solid blue; }
+header { border: 1px; }
 
 h1{
   display: table;
@@ -17,7 +17,7 @@ h1{
   margin-left: auto;
 }
 
-footer { border: 1px solid blue; }
+footer { border: 1px solid black; }
 
 #main{
   display: table;
@@ -56,13 +56,12 @@ button{
   margin-left: auto;
 }
 
-div#banner {
+header#banner {
   margin: 0 auto;
   padding: 0;
-  width: 4000px;
-  height: 200px;
+  width: 2000px;
+  height: 300px;
   background: url('../c.png') no-repeat left bottom;
-
 }
 
 
