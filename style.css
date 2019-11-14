@@ -1,14 +1,18 @@
 html {
     margin: 0;
     padding: 0;
+    height: 100%;
+
 }
+
 body {
     margin: 0;
     padding: 0;
     border: 1px;
-    height: 100vh;
+    height: 100%;
   
 }
+
 header { border: 1px; }
 
 h1{
@@ -20,9 +24,10 @@ h1{
 footer { border: 1px solid black; }
 
 #main{
-  display: table;
+  min-height: 100%;
   margin-right: auto;
   margin-left: auto;
+  
 }
 
 #menu ul{
@@ -48,6 +53,8 @@ p{
   display: table;
   margin-right: auto;
   margin-left: auto;
+  height: 100%;
+
 }
 
 button{

@@ -4,7 +4,7 @@ let $subMain = document.querySelector('#subMain');
     let data = await Promise.resolve(fetch_templates());
   }());
 
-let template1, template2, template3, template4, template5;
+let template1, template2, template3, template4, template5, templateHome;
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
   let e = document.createElement("div");
@@ -14,6 +14,7 @@ async function fetch_templates() {
   template3 = e.querySelector('#cadastroDeCampanhas');
   template4 = e.querySelector('#pesquisaCampanhas');
   template5 = e.querySelector('#campanhas');
+  templateHome = e.querySelector('#home')
 }
 
 let $menuLogin = document.querySelector('#viewLogin');
@@ -27,6 +28,9 @@ $menuCadastroCampanha.addEventListener('click', view3);
 
 let $menuPesquisaCampanha = document.querySelector('#viewPesquisaCampanha');
 $menuPesquisaCampanha.addEventListener('click', view4);
+
+let $menuHome = document.querySelector('#viewInicio');
+$menuHome.addEventListener('click', view5);
 
 function view1(){
     let $template = template1;
@@ -121,6 +125,11 @@ function view4(){
             .then(r => {console.log(r)})
         }
     );
+}
+
+function view5(){
+    let $template = templateHome;
+    $main.innerHTML = $template.innerHTML;
 }
 
 
