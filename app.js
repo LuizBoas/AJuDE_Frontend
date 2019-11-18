@@ -68,6 +68,7 @@ function view2() {
             function logaUsuario() {
                 let email = document.querySelector("#view2Email");
                 let senha = document.querySelector("#view2Senha");
+                localStorage.setItem("email", email.value);
                 fetch("http://localhost:8080/auth/login", {
                     'method': 'POST',
                     'body': `{"email": "${email.value}","senha": "${senha.value}" }`,
@@ -75,7 +76,7 @@ function view2() {
                 })
                 .then(r => r.json())
                 .then(r => {localStorage.setItem("token", r.token)})
-                .then(alert("Login Efetuado")); //fins de visualizacao
+                .then(alert("Login Efetuadoo")); //fins de visualizacao
             }
         );
     let $a = document.querySelector('#link');
@@ -98,7 +99,7 @@ function view3(){
                 'method': 'POST',
                 //'body': `{"nome": "${nomeCampanha.value}","descricao": "${descricaoCampanha.value}","meta": "${metaCampanha.value}"}`,
                 'body': JSON.stringify({"nome": nomeCampanha.value,"descricao": descricaoCampanha.value,
-                "meta": metaCampanha.value,"data": dataCampanha.value,"url": urlCampanha}),
+                "meta": metaCampanha.value,"data": dataCampanha.value,"url": urlCampanha, "email": localStorage.email}),
                 'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
             })
             .then(r => r.json())
