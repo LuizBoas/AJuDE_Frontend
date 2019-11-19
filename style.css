@@ -30,18 +30,18 @@ footer { border: 1px solid black; }
   
 }
 
-#menu ul{
+ul{
   margin: 0;
   background-color: black;
   list-style: none;
 }
 
-#menu ul li{
+ul li{
   display: inline;
 
 }
 
-#menu ul li a{
+li a{
   padding: 10px 10px;
   display: inline-block;
 

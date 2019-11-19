@@ -4,7 +4,7 @@ let $subMain = document.querySelector('#subMain');
     let data = await Promise.resolve(fetch_templates());
   }());
 
-let template1, template2, template3, template4, template5, templateHome;
+let template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar;
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
   let e = document.createElement("div");
@@ -14,11 +14,13 @@ async function fetch_templates() {
   template3 = e.querySelector('#cadastroDeCampanhas');
   template4 = e.querySelector('#pesquisaCampanhas');
   template5 = e.querySelector('#campanhas');
-  templateHome = e.querySelector('#home')
+  templateHome = e.querySelector('#home');
+  templateLogar = e.querySelector('#logar');
+  templateDeslogar = e.querySelector('#deslogar');
 }
 
 let $menuLogin = document.querySelector('#viewLogin');
-$menuLogin.addEventListener('click', view2);
+$menuLogin.addEventListener('click', teste);
 
 let $menuCadastro = document.querySelector('#viewCadastro');
 $menuCadastro.addEventListener('click', view1);
@@ -31,6 +33,43 @@ $menuPesquisaCampanha.addEventListener('click', view4);
 
 let $menuHome = document.querySelector('#viewInicio');
 $menuHome.addEventListener('click', view5);
+
+
+
+function novaView(){
+    localStorage.setItem("token", null);
+    view5();
+}
+
+function teste(){
+    fetch("http://localhost:8080/api", {
+    'method':'GET',
+    'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+    })
+    .then(r => { 
+                if(r.status==401){
+                    view2();
+                }else{
+                    viewDeslogar(); 
+                }
+                
+            }
+        );
+};
+
+
+function viewLogar(){
+    let $template = templateLogar;
+    $main.innerHTML = $template.innerHTML;
+}
+
+function viewDeslogar(){
+    let $template = templateDeslogar;
+    $main.innerHTML = $template.innerHTML;
+
+    let $a = document.querySelector('#viewDeslogar');
+    $a.addEventListener('click', novaView);
+}
 
 function view1(){
     let $template = template1;
@@ -75,13 +114,16 @@ function view2() {
                     'headers': {'Content-Type': 'application/json'}
                 })
                 .then(r => r.json())
-                .then(r => {localStorage.setItem("token", r.token)})
-                .then(alert("Login Efetuadoo")); //fins de visualizacao
+                .then(r => {localStorage.setItem("token", r.token)})                
             }
         );
     let $a = document.querySelector('#link');
     $a.addEventListener('click', view1);
 }
+
+
+
+                
 
 function view3(){
     let $template = template3;
