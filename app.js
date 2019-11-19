@@ -47,10 +47,11 @@ function teste(){
     'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
     })
     .then(r => { 
-                if(r.status==401){
-                    view2();
-                }else{
+                if(r.status==200){
                     viewDeslogar(); 
+
+                }else{
+                    view2();
                 }
                 
             }
@@ -114,16 +115,12 @@ function view2() {
                     'headers': {'Content-Type': 'application/json'}
                 })
                 .then(r => r.json())
-                .then(r => {localStorage.setItem("token", r.token)})                
+                .then(r => {localStorage.setItem("token", r.token)});
             }
         );
     let $a = document.querySelector('#link');
     $a.addEventListener('click', view1);
 }
-
-
-
-                
 
 function view3(){
     let $template = template3;
@@ -137,6 +134,7 @@ function view3(){
             let metaCampanha = document.querySelector("#view3MetaCampanha");
             let dataCampanha = document.querySelector("#view3DataCampanha");
             let urlCampanha = createURL(nomeCampanha.value);
+            localStorage.setItem("url", urlCampanha);
             fetch("http://localhost:8080/api/campanhas", {
                 'method': 'POST',
                 //'body': `{"nome": "${nomeCampanha.value}","descricao": "${descricaoCampanha.value}","meta": "${metaCampanha.value}"}`,
@@ -150,6 +148,7 @@ function view3(){
             .then(alert("Campanha Criada")); //fins de visualizacao
         }
     );
+    
 }
 
 function view4(){
@@ -174,7 +173,6 @@ function view5(){
     let $template = templateHome;
     $main.innerHTML = $template.innerHTML;
 }
-
 
 function createURL (text){     
     text = text.toLowerCase();                                                           
