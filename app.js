@@ -1,8 +1,4 @@
 let $main = document.querySelector('#main');
-let $subMain = document.querySelector('#subMain');
-(async function main() {
-    let data = await Promise.resolve(fetch_templates());
-  }());
 
 let template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar;
 async function fetch_templates() {
@@ -19,60 +15,53 @@ async function fetch_templates() {
   templateDeslogar = e.querySelector('#deslogar');
 }
 
-let $menuLogin = document.querySelector('#viewLogin');
-$menuLogin.addEventListener('click', teste);
+export async function viewDeslogar(){
+    let data = await Promise.resolve(fetch_templates());
 
-let $menuCadastro = document.querySelector('#viewCadastro');
-$menuCadastro.addEventListener('click', view1);
-
-let $menuCadastroCampanha = document.querySelector('#viewCadastroCampanha');
-$menuCadastroCampanha.addEventListener('click', view3);
-
-let $menuPesquisaCampanha = document.querySelector('#viewPesquisaCampanha');
-$menuPesquisaCampanha.addEventListener('click', view4);
-
-let $menuHome = document.querySelector('#viewInicio');
-$menuHome.addEventListener('click', view5);
-
-
-
-function novaView(){
-    localStorage.setItem("token", null);
-    view5();
-}
-
-function teste(){
-    fetch("http://localhost:8080/api", {
-    'method':'GET',
-    'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
-    })
-    .then(r => { 
-                if(r.status==200){
-                    viewDeslogar(); 
-
-                }else{
-                    view2();
-                }
-                
-            }
-        );
-};
-
-
-function viewLogar(){
-    let $template = templateLogar;
-    $main.innerHTML = $template.innerHTML;
-}
-
-function viewDeslogar(){
     let $template = templateDeslogar;
     $main.innerHTML = $template.innerHTML;
 
     let $a = document.querySelector('#viewDeslogar');
-    $a.addEventListener('click', novaView);
+    $a.addEventListener('click', view5);
 }
 
-function view1(){
+
+export async function view5(){
+    let data = await Promise.resolve(fetch_templates());
+    location.hash = "#/home";
+
+    let $template = templateHome;
+    $main.innerHTML = $template.innerHTML;
+}
+
+export async function view2() {
+    let data = await Promise.resolve(fetch_templates());
+    location.hash = "#/login";
+
+    let $template = template2;
+    $main.innerHTML = $template.innerHTML;
+
+    let $loginButton = document.querySelector("#view2Button");
+        $loginButton.addEventListener('click',
+            function logaUsuario() {
+                let email = document.querySelector("#view2Email");
+                let senha = document.querySelector("#view2Senha");
+                localStorage.setItem("email", email.value);
+                fetch("http://localhost:8080/auth/login", {
+                    'method': 'POST',
+                    'body': `{"email": "${email.value}","senha": "${senha.value}" }`,
+                    'headers': {'Content-Type': 'application/json'}
+                })
+                .then(r => r.json())
+                .then(r => {localStorage.setItem("token", r.token)});
+            }
+        );
+}
+
+export async function view1(){
+    let data = await Promise.resolve(fetch_templates());
+    location.hash = "#/cadastro";
+
     let $template = template1;
     $main.innerHTML = $template.innerHTML;
 
@@ -99,30 +88,10 @@ function view1(){
     $a.addEventListener('click', view2);
 }
 
-function view2() {
-    let $template = template2;
-    $main.innerHTML = $template.innerHTML;
+export async function view3(){
+    let data = await Promise.resolve(fetch_templates());
+    location.hash = "#/cadastroCampanha";
 
-    let $loginButton = document.querySelector("#view2Button");
-        $loginButton.addEventListener('click',
-            function logaUsuario() {
-                let email = document.querySelector("#view2Email");
-                let senha = document.querySelector("#view2Senha");
-                localStorage.setItem("email", email.value);
-                fetch("http://localhost:8080/auth/login", {
-                    'method': 'POST',
-                    'body': `{"email": "${email.value}","senha": "${senha.value}" }`,
-                    'headers': {'Content-Type': 'application/json'}
-                })
-                .then(r => r.json())
-                .then(r => {localStorage.setItem("token", r.token)});
-            }
-        );
-    let $a = document.querySelector('#link');
-    $a.addEventListener('click', view1);
-}
-
-function view3(){
     let $template = template3;
     $main.innerHTML = $template.innerHTML;
 
@@ -148,10 +117,12 @@ function view3(){
             .then(alert("Campanha Criada")); //fins de visualizacao
         }
     );
-    
 }
 
-function view4(){
+export async function view4(){
+    let data = await Promise.resolve(fetch_templates());
+    location.hash = "#/pesquisaCampanhas";
+
     let $template = template4;
     $main.innerHTML = $template.innerHTML;
 
@@ -167,11 +138,6 @@ function view4(){
             .then(r => {console.log(r)})
         }
     );
-}
-
-function view5(){
-    let $template = templateHome;
-    $main.innerHTML = $template.innerHTML;
 }
 
 function createURL (text){     
