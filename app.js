@@ -1,7 +1,7 @@
 let $main = document.querySelector('#main');
 let $menu = document.querySelector('#menu');
 
-let template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza;
+let resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza;
 
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
@@ -18,6 +18,7 @@ async function fetch_templates() {
   menu1 = e.querySelector('#menu1');
   menu2 = e.querySelector('#menu2');
   visualiza = e.querySelector('#visualizaCampanha');
+  resultadoPesquisa = e.querySelector('#resultadoPesquisa');
 }
 
 export async function viewMenu1(){
@@ -119,8 +120,48 @@ export async function view4(){
 }
 
 export async function viewResultadoPesquisa(dado){
-    let e = document.createElement("div");
-    e.innerText = dado[0];
+    $main.innerHTML+= resultadoPesquisa.innerHTML;
+
+    let table = document.querySelector('table');
+    dado.forEach(element => {
+        let linha = document.createElement('tr');
+
+        let nome = document.createElement('td');
+        nome.innerText = element.nome;
+
+        let data = document.createElement('td');
+        data.innerText = element.data;
+
+        let status = document.createElement('td');
+        status.innerText = element.status;
+
+        let meta = document.createElement('td');
+        meta.innerText = element.meta;
+
+        let botao = document.createElement('button');
+        botao.innerText = 'Visualizar detalhes';
+
+        linha.appendChild(nome);
+        linha.appendChild(data);
+        linha.appendChild(status);
+        linha.appendChild(meta);
+        linha.appendChild(botao);
+        table.appendChild(linha);
+
+        /*
+         data: "1313-12-12"
+         descricao: "3131"
+         doacao: 0
+         dono: {email: "a@a", primeiroNome: "a", ultimoNome: "a", cartaoCredito: 11, senha: "1"}
+         id: 1
+         likes: 0
+         meta: 31231
+         nome: "AAAA"
+         status: "ATIVA"
+         url: "aaaa"
+        */
+    });
+
 }
 
 export async function view1(){
