@@ -1,6 +1,7 @@
 let $main = document.querySelector('#main');
+let $menu = document.querySelector('#menu');
 
-let template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar;
+let template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2;
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
   let e = document.createElement("div");
@@ -13,7 +14,24 @@ async function fetch_templates() {
   templateHome = e.querySelector('#home');
   templateLogar = e.querySelector('#logar');
   templateDeslogar = e.querySelector('#deslogar');
+  menu1 = e.querySelector('#menu1');
+  menu2 = e.querySelector('#menu2');
 }
+
+export async function viewMenu1(){
+    let data = await Promise.resolve(fetch_templates());
+
+    let $template = menu1;
+    $menu.innerHTML = $template.innerHTML;
+}
+
+export async function viewMenu2(){
+    let data = await Promise.resolve(fetch_templates());
+
+    let $template = menu2;
+    $menu.innerHTML = $template.innerHTML;
+}
+
 
 export async function viewDeslogar(){
     let data = await Promise.resolve(fetch_templates());
@@ -22,9 +40,12 @@ export async function viewDeslogar(){
     $main.innerHTML = $template.innerHTML;
 
     let $a = document.querySelector('#viewDeslogar');
-    $a.addEventListener('click', view5);
+    $a.addEventListener('click', deslogar);
 }
 
+function deslogar(){
+    localStorage.clear();
+}
 
 export async function view5(){
     let data = await Promise.resolve(fetch_templates());

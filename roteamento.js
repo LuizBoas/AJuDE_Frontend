@@ -1,6 +1,7 @@
 import * as poxa from "/app.js";
 
 function roteamento(){
+    geraMenu();
     let hash = location.hash;
     let link = hash.substring(1, hash.length);
     console.log("link: " + link);
@@ -17,13 +18,29 @@ function roteamento(){
         case "/pesquisaCampanhas":
             poxa.view4();
             break;
-        case "/teste":
+        case "/deslogar":
             teste();
             break;
         default:
             poxa.view5();
             break;
     }
+}
+function geraMenu(){
+    fetch("http://localhost:8080/api", {
+        'method':'GET',
+        'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+        })
+        .then(r => { 
+            if(r.status==200){
+                poxa.viewMenu2();
+
+            }else{
+                poxa.viewMenu1();
+            }
+            
+        }
+    );
 }
 
 function teste(){
