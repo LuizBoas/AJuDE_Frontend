@@ -90,6 +90,39 @@ export async function view2() {
         );
 }
 
+export async function view4(){
+    let data = await Promise.resolve(fetch_templates());
+    location.hash = "#/pesquisaCampanhas";
+
+    let $template = template4;
+    $main.innerHTML = $template.innerHTML;
+
+    let $pesquisaButton = document.querySelector("#view4Button");
+    $pesquisaButton.addEventListener('click', 
+        async function pesquisaCampanhas(){
+            let nome = document.querySelector('#view4Substring');
+            let resposta = await fetch(`http://localhost:8080/api/campanhas/pesquisar/${nome.value}`,{
+                'method':'GET',
+                'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+            })
+            if(resposta.status==200){
+                let dado = await resposta.json();
+                console.log(dado);
+                localStorage.setItem("array", dado);
+                viewResultadoPesquisa(dado);
+            }else{
+                alert("Campanha Nao Encontrada");
+            }
+
+        }
+    );
+}
+
+export async function viewResultadoPesquisa(dado){
+    let e = document.createElement("div");
+    e.innerText = dado[0];
+}
+
 export async function view1(){
     let data = await Promise.resolve(fetch_templates());
     location.hash = "#/cadastro";
@@ -184,32 +217,18 @@ export async function visualizar(){
     let $template = visualiza;
     $main.innerHTML = $template.innerHTML;
 
-    let nome = sessionStorage.getItem("nomeCampanha");
-    console.log(nome);
-    //isso aqui nao pega
-    visualiza.querySelector('#vNome').innerHTML("oi");
-}
+    let nomeDaCampanha = document.querySelector('#vNome');
+    nomeDaCampanha.innerText = sessionStorage.getItem("nomeCampanha");
+    let descicaoDaCampanha = document.querySelector('#vDescricao');
+    descicaoDaCampanha.innerText = sessionStorage.getItem("descricaoCampanha");
+    let metaDaCampanha = document.querySelector('#vMeta');
+    metaDaCampanha.innerText = sessionStorage.getItem("metaCampanha");
+    let dataDaCampanha = document.querySelector('#vData');
+    dataDaCampanha.innerText = sessionStorage.getItem("dataCampanha");
+    // $template.innerHTML= "<h1>teste<h1>"
+    // $main.innerHTML = $template.innerHTML;
 
-
-export async function view4(){
-    let data = await Promise.resolve(fetch_templates());
-    location.hash = "#/pesquisaCampanhas";
-
-    let $template = template4;
-    $main.innerHTML = $template.innerHTML;
-
-    let $pesquisaButton = document.querySelector("#view4Button");
-    $pesquisaButton.addEventListener('click', 
-        function pesquisaCampanhas(){
-            let nome = document.querySelector('#view4Substring');
-            fetch(`http://localhost:8080/api/campanhas/pesquisar/${nome.value}`,{
-                'method':'GET',
-                'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
-            })
-            .then(r =>r.json())
-            .then(r => {console.log(r)})
-        }
-    );
+    console.log($template);
 }
 
 function createURL (text){     
