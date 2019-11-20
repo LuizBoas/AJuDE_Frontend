@@ -56,6 +56,8 @@
     Data de Encerramento:
     <input id="view3DataCampanha" type="date">
   </p>
+  <button id="visualizar">Visualizar</button>
+
   <button id="view3Button">Cadastrar Campanha</button>
 
 </template>
@@ -70,8 +72,12 @@
 </template>
 
 
-<template id="campanhas"> 
-  <p id = "camp">sdasfasfas</p>
+<template id="visualizaCampanha"> 
+  <h1 id="vNome"></h1>
+  <p id="vDescricao"></p>
+
+  <button id="criarCampanha"> Criar</button>
+
 </template>
 
 <template id="home">
@@ -102,7 +108,6 @@
         <ul>
           <li><a href = "#/home">Inicio</a></li>
           <li><a href = "#/deslogar">Deslogar</a></li>
-          <li><a href = "#/cadastro">Cadastro</a></li>
           <li><a href = "#/cadastroCampanha">Cadastrar Campanha</a></li>
           <li><a href = "#/pesquisaCampanhas">Pesquisa Campanha</a></li>
         </ul>

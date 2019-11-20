@@ -1,7 +1,8 @@
 let $main = document.querySelector('#main');
 let $menu = document.querySelector('#menu');
 
-let template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2;
+let template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza;
+
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
   let e = document.createElement("div");
@@ -16,6 +17,7 @@ async function fetch_templates() {
   templateDeslogar = e.querySelector('#deslogar');
   menu1 = e.querySelector('#menu1');
   menu2 = e.querySelector('#menu2');
+  visualiza = e.querySelector('#visualizaCampanha');
 }
 
 export async function viewMenu1(){
@@ -45,6 +47,8 @@ export async function viewDeslogar(){
 
 function deslogar(){
     localStorage.clear();
+    view5();
+
 }
 
 export async function view5(){
@@ -64,17 +68,24 @@ export async function view2() {
 
     let $loginButton = document.querySelector("#view2Button");
         $loginButton.addEventListener('click',
-            function logaUsuario() {
+        async function logaUsuario() {
                 let email = document.querySelector("#view2Email");
                 let senha = document.querySelector("#view2Senha");
-                localStorage.setItem("email", email.value);
-                fetch("http://localhost:8080/auth/login", {
+                let resposta = await fetch("http://localhost:8080/auth/login", {
                     'method': 'POST',
                     'body': `{"email": "${email.value}","senha": "${senha.value}" }`,
                     'headers': {'Content-Type': 'application/json'}
                 })
-                .then(r => r.json())
-                .then(r => {localStorage.setItem("token", r.token)});
+                if(resposta.status==200){
+                    let dado = await resposta.json();
+                    localStorage.setItem("token", dado.token);
+                    localStorage.setItem("email", email.value);
+                    alert("Login Efetivado");
+                    view5();
+                }else{
+                    alert("Erro ao Logar, tente novamente");
+                }
+
             }
         );
 }
@@ -118,27 +129,67 @@ export async function view3(){
 
     let $cadastraButton = document.querySelector("#view3Button");
     $cadastraButton.addEventListener('click', 
-        function cadastraCampanha(){
+        async function cadastraCampanha(){
             let nomeCampanha = document.querySelector("#view3NomeCampanha");
+            sessionStorage.setItem("nomeCampanha", nomeCampanha.value);
             let descricaoCampanha = document.querySelector("#view3DescricaoCampanha");
+            sessionStorage.setItem("descricaoCampanha", descricaoCampanha.value);
             let metaCampanha = document.querySelector("#view3MetaCampanha");
+            sessionStorage.setItem("metaCampanha", metaCampanha.value);
             let dataCampanha = document.querySelector("#view3DataCampanha");
+            sessionStorage.setItem("dataCampanha", dataCampanha.value);
             let urlCampanha = createURL(nomeCampanha.value);
+            sessionStorage.setItem("urlCampanha", urlCampanha);
             localStorage.setItem("url", urlCampanha);
-            fetch("http://localhost:8080/api/campanhas", {
+            let resposta = await fetch("http://localhost:8080/api/campanhas", {
                 'method': 'POST',
-                //'body': `{"nome": "${nomeCampanha.value}","descricao": "${descricaoCampanha.value}","meta": "${metaCampanha.value}"}`,
                 'body': JSON.stringify({"nome": nomeCampanha.value,"descricao": descricaoCampanha.value,
                 "meta": metaCampanha.value,"data": dataCampanha.value,"url": urlCampanha, "email": localStorage.email}),
                 'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
             })
-            .then(r => r.json())
-            .then(console.log(dataCampanha.value))
-            .then(r => {console.log(r)}) //fins de visualizacao
-            .then(alert("Campanha Criada")); //fins de visualizacao
+            if(resposta.status==200){
+                let dado = await resposta.json();
+                alert("Capanha Criada");
+            }else{
+                alert("Erro ao criar a Campanha");
+            }
+
         }
     );
+
+    let $visualizaButton = document.querySelector("#visualizar");
+    $visualizaButton.addEventListener('click', 
+        async function visualizaCampanha() {
+            let nomeCampanha = document.querySelector("#view3NomeCampanha");
+            sessionStorage.setItem("nomeCampanha", nomeCampanha.value);
+            let descricaoCampanha = document.querySelector("#view3DescricaoCampanha");
+            sessionStorage.setItem("descricaoCampanha", descricaoCampanha.value);
+            let metaCampanha = document.querySelector("#view3MetaCampanha");
+            sessionStorage.setItem("metaCampanha", metaCampanha.value);
+            let dataCampanha = document.querySelector("#view3DataCampanha");
+            sessionStorage.setItem("dataCampanha", dataCampanha.value);
+            let urlCampanha = createURL(nomeCampanha.value);
+            sessionStorage.setItem("urlCampanha", urlCampanha);
+            visualizar()
+        }
+
+    );
+
 }
+
+export async function visualizar(){
+    let data = await Promise.resolve(fetch_templates());
+    location.hash = "#/visualizar";
+
+    let $template = visualiza;
+    $main.innerHTML = $template.innerHTML;
+
+    let nome = sessionStorage.getItem("nomeCampanha");
+    console.log(nome);
+    //isso aqui nao pega
+    visualiza.querySelector('#vNome').innerHTML("oi");
+}
+
 
 export async function view4(){
     let data = await Promise.resolve(fetch_templates());

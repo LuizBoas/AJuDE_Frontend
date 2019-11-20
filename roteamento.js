@@ -21,6 +21,8 @@ function roteamento(){
         case "/deslogar":
             teste();
             break;
+        case "/visualizar":
+            break;
         default:
             poxa.view5();
             break;
@@ -62,4 +64,4 @@ function teste(){
 
 roteamento();
 
-window.addEventListener("hashchange", roteamento);
+window.addEventListener("hashchange", roteamento, geraMenu);
