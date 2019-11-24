@@ -1,7 +1,7 @@
 let $main = document.querySelector('#main');
 let $menu = document.querySelector('#menu');
 
-let resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza;
+let resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha;
 
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
@@ -19,6 +19,7 @@ async function fetch_templates() {
   menu2 = e.querySelector('#menu2');
   visualiza = e.querySelector('#visualizaCampanha');
   resultadoPesquisa = e.querySelector('#resultadoPesquisa');
+  viewCampanha= e.querySelector('#campanha');
 }
 
 export async function viewMenu1(){
@@ -201,6 +202,9 @@ export async function view3(){
     let $template = template3;
     $main.innerHTML = $template.innerHTML;
 
+    document.querySelector('#view3DataCampanha').max = new Date();
+
+
     let $cadastraButton = document.querySelector("#view3Button");
     $cadastraButton.addEventListener('click', 
         async function cadastraCampanha(){
@@ -223,7 +227,7 @@ export async function view3(){
             })
             if(resposta.status==200){
                 let dado = await resposta.json();
-                alert("Capanha Criada");
+                alert(`Capanha Criada, compartilhe sua campanha: localhost:8000/#/campanha/${urlCampanha}`);
             }else{
                 alert("Erro ao criar a Campanha");
             }
@@ -249,6 +253,56 @@ export async function view3(){
 
     );
 
+}
+
+export async function campanha(url){
+    /*<template id="campanha">
+    <p id="cNome">Nome</p>
+    <p id="cDescricao">Descricao</p>
+    <p id="cDono">Dono</p>
+    <p id="cData">Data Limite</p>
+    <p id="cStatus">Status</p>
+    <p id="cMeta">Meta (R$)</p>
+    </template>*/
+    let resposta = await fetch(`http://localhost:8080/api/campanhas/${url}`, {
+                    'method': 'GET',
+                    'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+    })
+    if(resposta.status==200){
+        let $template = viewCampanha;
+        $main.innerHTML = $template.innerHTML;
+
+        let dado = await resposta.json();
+        console.log(dado);
+        /* 
+            data: "1111-11-10"
+            descricao: "pablwo e top"
+            doacao: 0
+            dono: {email: "a@a", primeiroNome: "a", ultimoNome: "a", cartaoCredito: 11, senha: "1"}
+            id: 4
+            likes: 0
+            meta: 123131
+            nome: "pablwo"
+            status: "ATIVA"
+            url: "pablwo"        
+        */
+        let cNome = document.querySelector('#cNome');
+        cNome.innerText = dado.nome;
+        let cDescricao = document.querySelector('#cDescricao');
+        cDescricao.innerText = dado.descricao;
+        let cDono = document.querySelector('#cDono');
+        cDono.innerText = dado.dono.email;
+        let cData = document.querySelector('#cData');
+        cData.innerText = dado.data;
+        let cStatus = document.querySelector('#cStatus');
+        cStatus.innerText = dado.status;
+        let cMeta = document.querySelector('#cMeta');
+        cMeta.innerText = dado.meta;
+        let cDoacao = document.querySelector('#cDoacao');
+        cDoacao.innerText = dado.doacao;
+    }else{
+        alert("Erro");
+    }
 }
 
 export async function visualizar(){

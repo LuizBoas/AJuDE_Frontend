@@ -5,28 +5,35 @@ function roteamento(){
     let hash = location.hash;
     let link = hash.substring(1, hash.length);
     console.log("link: " + link);
-    switch(link){
-        case "/login":
-            poxa.view2();
-            break;
-        case "/cadastro":
-            poxa.view1();
-            break;
-        case "/cadastroCampanha":
-            poxa.view3();
-            break;
-        case "/pesquisaCampanhas":
-            poxa.view4();
-            break;
-        case "/deslogar":
-            teste();
-            break;
-        case "/visualizar":
-            break;
-        default:
-            poxa.view5();
-            break;
+    if(link.includes("/campanha/")){
+        let linkCampanha = link.substr(10);
+        console.log(linkCampanha);
+        poxa.campanha(linkCampanha);
+    }else{
+        switch(link){
+            case "/login":
+                poxa.view2();
+                break;
+            case "/cadastro":
+                poxa.view1();
+                break;
+            case "/cadastroCampanha":
+                poxa.view3();
+                break;
+            case "/pesquisaCampanhas":
+                poxa.view4();
+                break;
+            case "/deslogar":
+                teste();
+                break;
+            case "/visualizar":
+                break;
+            default:
+                poxa.view5();
+                break;
+        }
     }
+    
 }
 function geraMenu(){
     fetch("http://localhost:8080/api", {

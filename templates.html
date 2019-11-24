@@ -24,41 +24,52 @@
     <p><a href="#login" id="link">Já possui cadastro? Clique aqui para fazer login.</a></p>
 </template>
 
+<template id="cadastroDeUsuariosRealizado">
+  <div>
+      <p>Cadastro realizado com sucesso!</p>
+          <button id="vaiParaLogin">Login</button>
+  </div>
+</template>
+
 <template id= "loginDoUsuario">
-    <h1>Login</h1>
-    <p>
-      Email:
-      <input id="view2Email" type="email">
-    </p>
-    <p>
-      Senha:
-      <input id="view2Senha" type="password">
-    </p>
-    <button id="view2Button">Logar</button>
-    <p><a href="#cadastro" id="link">Ainda não possui login? Faça seu cadastro clicando aqui.</a></p>
+  <div class="block">
+    <div>
+      <h1>Login</h1>
+      <div>
+      <p>Email:<input id="view2Email" type="email"></p>
+      <p>Senha:<input id="view2Senha" type="password"></p>
+      <button id="view2Button">Logar</button>
+      <p>
+        <a href="#cadastro" id="link">
+          Ainda não possui login? Faça seu cadastro clicando aqui.
+        </a>
+      </p>
+    </div>
+    </div>
+  </div>
 </template>
 
 <template id="cadastroDeCampanhas">
-  <h1>Cadastrar Campanha</h1>
-  <p>
-    Nome da Campanha:
-    <input id="view3NomeCampanha" type="text">
-  </p>
-  <p>
-    Descricao da Campanha:
-    <input id="view3DescricaoCampanha" type="text">
-  </p>
-  <p>
-    Meta de Arrecadação:
-    <input id="view3MetaCampanha" type="number">
-  </p>
-  <p>
-    Data de Encerramento:
-    <input id="view3DataCampanha" type="date">
-  </p>
-  <button id="visualizar">Visualizar</button>
+  <div>
+    <h1>Cadastrar Campanha</h1>
+      <div> 
+        <div class="row">
+          <div class="col"><div class="teste">Nome da Campanha:<input id="view3NomeCampanha" type="text"></div></div>
+        </div>
+        <div class="row">
+          <div class="col"><div class="teste">Descricao da Campanha:<input id="view3DescricaoCampanha" type="text" style="width: 400px; height: 200px;"></p></div></div>
+        </div>
+        <div class="row">
+          <div class="teste">
+            <div class="col col-2">Meta de Arrecadação:<input id="view3MetaCampanha" type="number" min=0></div> 
+            <div class="col col-2">Data de Encerramento:<input id="view3DataCampanha" type="date" min="2019-11-20"></div>
+          </div>
+        </div>
 
-  <button id="view3Button">Cadastrar Campanha</button>
+        <button id="visualizar">Visualizar</button>
+        <button id="view3Button">Cadastrar Campanha</button>
+      </div>
+  </div>
 
 </template>
 
@@ -126,3 +137,28 @@
     </table>
   </div>
 </template>
+
+<template id="campanha">
+  <div class = "viewCampanha">
+    <h1>Nome</h1>
+    <p id="cNome">Nome</p>
+
+    <h1>Descricao</h1>
+    <p id="cDescricao">Descricao</p>
+
+    <h1>Email do Dono</h1>
+    <p id="cDono">Dono</p>
+
+    <h1>Data</h1>
+    <p id="cData">Data Limite</p>
+
+    <h1>Status</h1>
+    <p id="cStatus">Status</p>    
+
+    <h1>Meta (R$)</h1>
+    <p id="cMeta">Meta</p>
+
+    <h1>Doacao (R$)</h1>
+    <p id="cDoacao">Doacao</p>
+  </div>
+  </template>
