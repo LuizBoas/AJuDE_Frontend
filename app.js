@@ -260,6 +260,7 @@ export async function campanha(url){
     })
     if(resposta.status==200){
         location.hash = `#/campanha/${url}`;
+        localStorage.setItem('hash', url);
         let $template = viewCampanha;
         $main.innerHTML = $template.innerHTML;
         let dado = await resposta.json();
@@ -312,15 +313,12 @@ export async function campanha(url){
                             'body':`{"idCampanha": "${dado.id}","comentario": "${novo_texto.value}","email": "${localStorage.getItem('email')}" }`,
                             'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
                         })
-                        if(resposta.status==200){
+                        if(resposta3.status==200){
                             alert("Seu comentário foi registrado!");
                             campanha(url);
-
                         }
                     }
-                )
-                
-                
+                )  
         });
         
         let array = dado.hashcomentarios;
@@ -330,9 +328,13 @@ export async function campanha(url){
             array.forEach(comentario =>{
                 let div_comentario = criaComentario(comentario);
                 espacoComentario.appendChild(div_comentario.caixa);
+                //antes disso funciona
+                // array.forEach(comentario =>{
                 }
             );
         }
+
+
 
     }else{
         alert("Erro");
@@ -356,17 +358,71 @@ function criaComentario(comentario){
 
     function preenche(){
 		c.email.innerText = comentario.usuario.email;
-		c.textoComentario.innerHTML = comentario.comentario;
+        c.textoComentario.innerHTML = comentario.comentario;
+        //botao de enviar comentario
+        c.botaoEnviarComentario = c.botoes.children[0];
     };
-    
 
     preenche();
 
+    c.botaoEnviarComentario.addEventListener('click', 
+    async function escreverComentario(){
+        let espacoComentario = c.caixa;
+        let novoComentario = document.querySelector('#formato_novo_comentario');
+        espacoComentario.innerHTML += novoComentario.innerHTML;
+        //topzada
+
+        let buttonEnviar = document.querySelector('#enviar_comentario');
+        buttonEnviar.addEventListener('click', 
+        async function enviarComentario(){
+            let novo_texto = document.querySelector('#texto_novo_comentario');
+            let resposta3 = await fetch(`http://localhost:8080/comentaComentario`,{
+                'method':'POST',
+                'body':`{"idCampanha": "${comentario.id}","comentario": "${novo_texto.value}","email": "${localStorage.getItem('email')}" }`,
+                'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+            })
+            if(resposta3.status==200){
+                alert("Seu comentário foi registrado!");
+                campanha(localStorage.getItem('hash'));
+            }
+        }
+        ) 
+    })
+
+    
+
+
+
     c.caixa.classList.add('caixa_comentario');
     return c;
-
 }
 
+
+async function comentarioComentario(comentario){
+    let template = document.querySelector('#formato_novo_comentario');
+    let caixa_comentario = document.createElement('div');
+    caixa_comentario.innerHTML = template.innerHTML;
+    let c ={
+        objetoComentario: comentario,
+        caixa: caixa_comentario.children[0]
+    };
+
+    c.caixaTexto = c.caixa.children[0];
+    c.botoes = c.caixa.children[1];
+    c.botaoEnviarComentario = c.botoes.children[0];
+
+
+    c.botaoEnviarComentario.addEventListener('click', function enviarComentario(){
+
+        async function comentarComentario(){
+            let texto = c.caixaTexto.value;
+            
+            let id = comentario.objetoComentario.id;
+            console.log(texto) 
+        }
+
+    })
+}
 
 
 
