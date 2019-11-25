@@ -315,12 +315,11 @@ export async function campanha(url){
                         })
                         if(resposta3.status==200){
                             alert("Seu comentário foi registrado!");
-                            campanha(url);
                         }
+                        campanha(url);
                     }
                 )  
         });
-        
         let array = dado.hashcomentarios;
         let espacoComentario = document.querySelector('#espacoComentario');
         if(array.length>0){
@@ -328,20 +327,32 @@ export async function campanha(url){
             array.forEach(comentario =>{
                 let div_comentario = criaComentario(comentario);
                 let respostas = comentario.resposta;
-
-                if(respostas.length>0){
-                    respostas.forEach(newComentario => {
-                        let div_reposta = criaComentario(newComentario);
-                        console.log(div_reposta.caixa)
-                        div_comentario.caixa.appendChild(div_reposta.caixa);
-                    });
-                }
+                let retorno = visualizacaoRecursiva(div_comentario,respostas);
+                // if(respostas.length>0){
+                //     respostas.forEach(newComentario => {
+                //         let div_reposta = criaComentario(newComentario);
+                //         console.log(div_reposta.caixa)
+                //         div_comentario.caixa.appendChild(div_reposta.caixa);
+                //     });
+                // }
                 espacoComentario.appendChild(div_comentario.caixa);
             });
         }
     }else{
         alert("Erro");
     }
+}
+
+async function visualizacaoRecursiva(div_comentario,respostas){
+    // console.log(respostas)
+    if(respostas.length>0){
+        respostas.forEach(newComentario => {
+            let div_reposta = criaComentario(newComentario);
+            visualizacaoRecursiva(div_reposta,newComentario.resposta);
+            div_comentario.caixa.appendChild(div_reposta.caixa);
+        });
+    }
+    return div_comentario;
 }
 
 function criaComentario(comentario){
@@ -360,9 +371,8 @@ function criaComentario(comentario){
     c.botoes = c.caixa.children[3];
 
     function preenche(){
-		c.email.innerText = comentario.usuario.email;
+		c.email.innerText = "user: " + comentario.usuario.email;
         c.textoComentario.innerHTML = comentario.comentario;
-        //botao de enviar comentario
         c.botaoEnviarComentario = c.botoes.children[0];
     };
 
@@ -396,31 +406,31 @@ function criaComentario(comentario){
 }
 
 
-async function comentarioComentario(comentario){
-    let template = document.querySelector('#formato_novo_comentario');
-    let caixa_comentario = document.createElement('div');
-    caixa_comentario.innerHTML = template.innerHTML;
-    let c ={
-        objetoComentario: comentario,
-        caixa: caixa_comentario.children[0]
-    };
+// async function comentarioComentario(comentario){
+//     let template = document.querySelector('#formato_novo_comentario');
+//     let caixa_comentario = document.createElement('div');
+//     caixa_comentario.innerHTML = template.innerHTML;
+//     let c ={
+//         objetoComentario: comentario,
+//         caixa: caixa_comentario.children[0]
+//     };
 
-    c.caixaTexto = c.caixa.children[0];
-    c.botoes = c.caixa.children[1];
-    c.botaoEnviarComentario = c.botoes.children[0];
+//     c.caixaTexto = c.caixa.children[0];
+//     c.botoes = c.caixa.children[1];
+//     c.botaoEnviarComentario = c.botoes.children[0];
 
 
-    c.botaoEnviarComentario.addEventListener('click', function enviarComentario(){
+//     c.botaoEnviarComentario.addEventListener('click', function enviarComentario(){
 
-        async function comentarComentario(){
-            let texto = c.caixaTexto.value;
+//         async function comentarComentario(){
+//             let texto = c.caixaTexto.value;
             
-            let id = comentario.objetoComentario.id;
-            console.log(texto) 
-        }
+//             let id = comentario.objetoComentario.id;
+//             console.log(texto) 
+//         }
 
-    })
-}
+//     })
+// }
 
 
 
