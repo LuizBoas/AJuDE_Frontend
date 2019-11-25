@@ -327,15 +327,18 @@ export async function campanha(url){
             espacoComentario.innerHTML='';
             array.forEach(comentario =>{
                 let div_comentario = criaComentario(comentario);
-                espacoComentario.appendChild(div_comentario.caixa);
-                //antes disso funciona
-                // array.forEach(comentario =>{
+                let respostas = comentario.resposta;
+
+                if(respostas.length>0){
+                    respostas.forEach(newComentario => {
+                        let div_reposta = criaComentario(newComentario);
+                        console.log(div_reposta.caixa)
+                        div_comentario.caixa.appendChild(div_reposta.caixa);
+                    });
                 }
-            );
+                espacoComentario.appendChild(div_comentario.caixa);
+            });
         }
-
-
-
     }else{
         alert("Erro");
     }
@@ -388,11 +391,6 @@ function criaComentario(comentario){
         }
         ) 
     })
-
-    
-
-
-
     c.caixa.classList.add('caixa_comentario');
     return c;
 }
