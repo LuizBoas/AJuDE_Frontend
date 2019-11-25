@@ -1,7 +1,7 @@
 let $main = document.querySelector('#main');
 let $menu = document.querySelector('#menu');
 
-let resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha;
+let newTemplate, resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha;
 
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
@@ -20,6 +20,7 @@ async function fetch_templates() {
   visualiza = e.querySelector('#visualizaCampanha');
   resultadoPesquisa = e.querySelector('#resultadoPesquisa');
   viewCampanha= e.querySelector('#campanha');
+//   newTemplate = e.querySelector('#cadastro_campanha');
 }
 
 export async function viewMenu1(){
@@ -36,21 +37,19 @@ export async function viewMenu2(){
     $menu.innerHTML = $template.innerHTML;
 }
 
-
 export async function viewDeslogar(){
     let data = await Promise.resolve(fetch_templates());
 
     let $template = templateDeslogar;
     $main.innerHTML = $template.innerHTML;
 
-    let $a = document.querySelector('#viewDeslogar');
-    $a.addEventListener('click', deslogar);
+    let $loginButton = document.querySelector("#buttonDeslogar");
+    $loginButton.addEventListener('click', deslogar);
 }
 
 function deslogar(){
     localStorage.clear();
     view5();
-
 }
 
 export async function view5(){
@@ -109,7 +108,6 @@ export async function view4(){
             })
             if(resposta.status==200){
                 let dado = await resposta.json();
-                console.log(dado);
                 localStorage.setItem("array", dado);
                 viewResultadoPesquisa(dado);
             }else{
@@ -139,28 +137,24 @@ export async function viewResultadoPesquisa(dado){
         let meta = document.createElement('td');
         meta.innerText = element.meta;
 
+        let visualizar = document.createElement('td');
+
         let botao = document.createElement('button');
         botao.innerText = 'Visualizar detalhes';
+
+        botao.addEventListener('click', function chama(){
+            campanha(element.url);
+        })
+
+        visualizar.appendChild(botao);
 
         linha.appendChild(nome);
         linha.appendChild(data);
         linha.appendChild(status);
         linha.appendChild(meta);
-        linha.appendChild(botao);
-        table.appendChild(linha);
 
-        /*
-         data: "1313-12-12"
-         descricao: "3131"
-         doacao: 0
-         dono: {email: "a@a", primeiroNome: "a", ultimoNome: "a", cartaoCredito: 11, senha: "1"}
-         id: 1
-         likes: 0
-         meta: 31231
-         nome: "AAAA"
-         status: "ATIVA"
-         url: "aaaa"
-        */
+        linha.appendChild(visualizar);
+        table.appendChild(linha);
     });
 
 }
@@ -174,25 +168,25 @@ export async function view1(){
 
     let $createButton = document.querySelector("#view1Button");
         $createButton.addEventListener('click', 
-            function cadastraUsuario() {
+            async function cadastraUsuario() {
                 let primeiroNome = document.querySelector("#view1PrimeiroNome");
                 let email = document.querySelector("#view1Email");
                 let ultimoNome = document.querySelector("#view1UltimoNome");
                 let cartaoCredito = document.querySelector("#view1CartaoCredito");
                 let senha = document.querySelector("#view1Senha");
-                fetch("http://localhost:8080/api/usuarios", {
+                let resposta = await fetch("http://localhost:8080/api/usuarios", {
                     'method': 'POST',
                     'body': `{"email": "${email.value}","primeiroNome": "${primeiroNome.value}","ultimoNome": "${ultimoNome.value}",
                     "cartaoCredito": "${cartaoCredito.value}","senha": "${senha.value}" }`,
                     'headers': {'Content-Type': 'application/json'}
                 })
-                .then(r => r.json())
-                .then(r => {console.log(r)}) //fins de visualizacao
-                .then(alert("Usuario Cadastrado")); //fins de visualizacao
+                if(resposta.status==200){
+                    alert("Usuario Cadastrado");
+                }else{
+                    alert("Email já cadastrado");
+                }
             }
         );
-    let $a = document.querySelector('#link');
-    $a.addEventListener('click', view2);
 }
 
 export async function view3(){
@@ -228,103 +222,178 @@ export async function view3(){
             if(resposta.status==200){
                 let dado = await resposta.json();
                 alert(`Capanha Criada, compartilhe sua campanha: localhost:8000/#/campanha/${urlCampanha}`);
+                //deveria ser 409 mas ta dando 500
+            }else if(resposta.status==500){
+                alert("Erro ao Criar a Campanha, Nome de Camapanha Já Cadastrado");
             }else{
+                // console.log(resposta.status);
                 alert("Erro ao criar a Campanha");
             }
 
         }
     );
 
-    let $visualizaButton = document.querySelector("#visualizar");
-    $visualizaButton.addEventListener('click', 
-        async function visualizaCampanha() {
-            let nomeCampanha = document.querySelector("#view3NomeCampanha");
-            sessionStorage.setItem("nomeCampanha", nomeCampanha.value);
-            let descricaoCampanha = document.querySelector("#view3DescricaoCampanha");
-            sessionStorage.setItem("descricaoCampanha", descricaoCampanha.value);
-            let metaCampanha = document.querySelector("#view3MetaCampanha");
-            sessionStorage.setItem("metaCampanha", metaCampanha.value);
-            let dataCampanha = document.querySelector("#view3DataCampanha");
-            sessionStorage.setItem("dataCampanha", dataCampanha.value);
-            let urlCampanha = createURL(nomeCampanha.value);
-            sessionStorage.setItem("urlCampanha", urlCampanha);
-            visualizar()
-        }
+    // let $visualizaButton = document.querySelector("#visualizar");
+    // $visualizaButton.addEventListener('click', 
+    //     async function visualizaCampanha() {
+    //         let nomeCampanha = document.querySelector("#view3NomeCampanha");
+    //         sessionStorage.setItem("nomeCampanha", nomeCampanha.value);
+    //         let descricaoCampanha = document.querySelector("#view3DescricaoCampanha");
+    //         sessionStorage.setItem("descricaoCampanha", descricaoCampanha.value);
+    //         let metaCampanha = document.querySelector("#view3MetaCampanha");
+    //         sessionStorage.setItem("metaCampanha", metaCampanha.value);
+    //         let dataCampanha = document.querySelector("#view3DataCampanha");
+    //         sessionStorage.setItem("dataCampanha", dataCampanha.value);
+    //         let urlCampanha = createURL(nomeCampanha.value);
+    //         sessionStorage.setItem("urlCampanha", urlCampanha);
+    //         visualizar()
+    //     }
 
-    );
+    // );
 
 }
 
 export async function campanha(url){
-    /*<template id="campanha">
-    <p id="cNome">Nome</p>
-    <p id="cDescricao">Descricao</p>
-    <p id="cDono">Dono</p>
-    <p id="cData">Data Limite</p>
-    <p id="cStatus">Status</p>
-    <p id="cMeta">Meta (R$)</p>
-    </template>*/
     let resposta = await fetch(`http://localhost:8080/api/campanhas/${url}`, {
                     'method': 'GET',
                     'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
     })
     if(resposta.status==200){
+        location.hash = `#/campanha/${url}`;
         let $template = viewCampanha;
         $main.innerHTML = $template.innerHTML;
-
         let dado = await resposta.json();
-        console.log(dado);
-        /* 
-            data: "1111-11-10"
-            descricao: "pablwo e top"
-            doacao: 0
-            dono: {email: "a@a", primeiroNome: "a", ultimoNome: "a", cartaoCredito: 11, senha: "1"}
-            id: 4
-            likes: 0
-            meta: 123131
-            nome: "pablwo"
-            status: "ATIVA"
-            url: "pablwo"        
-        */
+
         let cNome = document.querySelector('#cNome');
-        cNome.innerText = dado.nome;
+        cNome.value = dado.nome;
         let cDescricao = document.querySelector('#cDescricao');
-        cDescricao.innerText = dado.descricao;
+        cDescricao.value = dado.descricao;
         let cDono = document.querySelector('#cDono');
-        cDono.innerText = dado.dono.email;
+        cDono.value = dado.dono.email;
         let cData = document.querySelector('#cData');
-        cData.innerText = dado.data;
+        cData.value = dado.data;
         let cStatus = document.querySelector('#cStatus');
-        cStatus.innerText = dado.status;
+        cStatus.value = dado.status;
         let cMeta = document.querySelector('#cMeta');
-        cMeta.innerText = dado.meta;
+        cMeta.value = dado.meta;
         let cDoacao = document.querySelector('#cDoacao');
-        cDoacao.innerText = dado.doacao;
+        cDoacao.value = dado.doacao;
+        let cLike = document.querySelector('#cLike');
+        cLike.value = dado.likes.length;
+
+        let $likeButtom = document.querySelector("#like");
+        $likeButtom.addEventListener('click', 
+            async function darLike(){
+                let resposta2 = await fetch(`http://localhost:8080/like/${dado.id}`,{
+                    'method':'GET',
+                    'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+                })
+                if (resposta2.status==200){
+                    campanha(dado.url);
+                }else{
+                    alert('Erro, tente novamente');
+                }
+        });
+
+        let $comentarioButtom = document.querySelector("#comentarioButtom");
+        $comentarioButtom.addEventListener('click',
+            async function escreverComentario(){
+                let espacoComentario = document.querySelector('#espacoComentario');
+                let novoComentario = document.querySelector('#formato_novo_comentario');
+                espacoComentario.innerHTML += novoComentario.innerHTML;
+                $comentarioButtom.removeEventListener('click', escreverComentario);
+                //topzada
+                let $Button = document.querySelector('#enviar_comentario');
+                $Button.addEventListener('click', 
+                    async function enviarComentario(){
+                        let novo_texto = document.querySelector('#texto_novo_comentario');
+                        let resposta3 = await fetch(`http://localhost:8080/comentaCampanha`,{
+                            'method':'POST',
+                            'body':`{"idCampanha": "${dado.id}","comentario": "${novo_texto.value}","email": "${localStorage.getItem('email')}" }`,
+                            'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+                        })
+                        if(resposta.status==200){
+                            alert("Seu comentário foi registrado!");
+                            campanha(url);
+
+                        }
+                    }
+                )
+                
+                
+        });
+        
+        let array = dado.hashcomentarios;
+        let espacoComentario = document.querySelector('#espacoComentario');
+        if(array.length>0){
+            espacoComentario.innerHTML='';
+            array.forEach(comentario =>{
+                let div_comentario = criaComentario(comentario);
+                espacoComentario.appendChild(div_comentario.caixa);
+                }
+            );
+        }
+
     }else{
         alert("Erro");
     }
 }
 
-export async function visualizar(){
-    let data = await Promise.resolve(fetch_templates());
-    location.hash = "#/visualizar";
+function criaComentario(comentario){
+	let newTemplate = document.querySelector('#comentario');
+	let caixa_comentario = document.createElement('div');
+	caixa_comentario.innerHTML = newTemplate.innerHTML;
 
-    let $template = visualiza;
-    $main.innerHTML = $template.innerHTML;
+	let c = {
+		objetoComentario: comentario,
+		caixa: caixa_comentario.children[0],
+		div_lista_respostas: null
+    };
 
-    let nomeDaCampanha = document.querySelector('#vNome');
-    nomeDaCampanha.innerText = sessionStorage.getItem("nomeCampanha");
-    let descicaoDaCampanha = document.querySelector('#vDescricao');
-    descicaoDaCampanha.innerText = sessionStorage.getItem("descricaoCampanha");
-    let metaDaCampanha = document.querySelector('#vMeta');
-    metaDaCampanha.innerText = sessionStorage.getItem("metaCampanha");
-    let dataDaCampanha = document.querySelector('#vData');
-    dataDaCampanha.innerText = sessionStorage.getItem("dataCampanha");
-    // $template.innerHTML= "<h1>teste<h1>"
-    // $main.innerHTML = $template.innerHTML;
+    c.email = c.caixa.children[0];
+    c.textoComentario = c.caixa.children[1];
+    c.botoes = c.caixa.children[3];
 
-    console.log($template);
+    function preenche(){
+		c.email.innerText = comentario.usuario.email;
+		c.textoComentario.innerHTML = comentario.comentario;
+    };
+    
+
+    preenche();
+
+    c.caixa.classList.add('caixa_comentario');
+    return c;
+
 }
+
+
+
+
+
+
+
+
+// export async function visualizar(){
+//     let data = await Promise.resolve(fetch_templates());
+//     location.hash = "#/visualizar";
+
+//     let $template = visualiza;
+//     $main.innerHTML = $template.innerHTML;
+
+//     let nomeDaCampanha = document.querySelector('#vNome');
+//     nomeDaCampanha.innerText = sessionStorage.getItem("nomeCampanha");
+//     let descicaoDaCampanha = document.querySelector('#vDescricao');
+//     descicaoDaCampanha.innerText = sessionStorage.getItem("descricaoCampanha");
+//     let metaDaCampanha = document.querySelector('#vMeta');
+//     metaDaCampanha.innerText = sessionStorage.getItem("metaCampanha");
+//     let dataDaCampanha = document.querySelector('#vData');
+//     dataDaCampanha.innerText = sessionStorage.getItem("dataCampanha");
+//     // $template.innerHTML= "<h1>teste<h1>"
+//     // $main.innerHTML = $template.innerHTML;
+
+//     console.log($template);
+// }
 
 function createURL (text){     
     text = text.toLowerCase();                                                           

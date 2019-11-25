@@ -4,10 +4,10 @@ function roteamento(){
     geraMenu();
     let hash = location.hash;
     let link = hash.substring(1, hash.length);
-    console.log("link: " + link);
+    // console.log("link: " + link);
     if(link.includes("/campanha/")){
         let linkCampanha = link.substr(10);
-        console.log(linkCampanha);
+        // console.log(linkCampanha);
         poxa.campanha(linkCampanha);
     }else{
         switch(link){

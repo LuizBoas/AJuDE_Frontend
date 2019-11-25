@@ -2,34 +2,33 @@
     <h1>Cadastrar Usuario</h1>
     <p>
       Primeiro Nome:
-      <input id="view1PrimeiroNome" type="text">
+      <input id="view1PrimeiroNome" type="text" required='required'>
     </p>
     <p>
       Último Nome:
-      <input id="view1UltimoNome" type="text">
+      <input id="view1UltimoNome" type="text" required='required'>
       </p>
     <p>
       Email:
-      <input id="view1Email" type="email">
+      <input id="view1Email" type="email" required='required'>
     </p>
     <p>
       Cartão de Crédito:
-      <input id="view1CartaoCredito" type="number">
+      <input id="view1CartaoCredito" type="number" required='required'>
     </p>
     <p>
       Senha:
-      <input id="view1Senha" type="password">
+      <input id="view1Senha" type="password" required='required'>
     </p>    
     <button id="view1Button">Salvar</button>
-    <p><a href="#login" id="link">Já possui cadastro? Clique aqui para fazer login.</a></p>
 </template>
 
-<template id="cadastroDeUsuariosRealizado">
+<!-- <template id="cadastroDeUsuariosRealizado">
   <div>
       <p>Cadastro realizado com sucesso!</p>
           <button id="vaiParaLogin">Login</button>
   </div>
-</template>
+</template> -->
 
 <template id= "loginDoUsuario">
   <div class="block">
@@ -39,39 +38,67 @@
       <p>Email:<input id="view2Email" type="email"></p>
       <p>Senha:<input id="view2Senha" type="password"></p>
       <button id="view2Button">Logar</button>
-      <p>
-        <a href="#cadastro" id="link">
-          Ainda não possui login? Faça seu cadastro clicando aqui.
-        </a>
-      </p>
     </div>
     </div>
   </div>
 </template>
 
-<template id="cadastroDeCampanhas">
-  <div>
-    <h1>Cadastrar Campanha</h1>
-      <div> 
-        <div class="row">
-          <div class="col"><div class="teste">Nome da Campanha:<input id="view3NomeCampanha" type="text"></div></div>
-        </div>
-        <div class="row">
-          <div class="col"><div class="teste">Descricao da Campanha:<input id="view3DescricaoCampanha" type="text" style="width: 400px; height: 200px;"></p></div></div>
-        </div>
-        <div class="row">
-          <div class="teste">
-            <div class="col col-2">Meta de Arrecadação:<input id="view3MetaCampanha" type="number" min=0></div> 
-            <div class="col col-2">Data de Encerramento:<input id="view3DataCampanha" type="date" min="2019-11-20"></div>
-          </div>
-        </div>
 
-        <button id="visualizar">Visualizar</button>
+<template id ="cadastroDeCampanhas">
+  <div class = "teste">
+    <div class="row">
+      <div class='col'><div>Nome da Campanha:<input id="view3NomeCampanha" type="text"></div></div>
+    </div>
+    <div class="row">
+      <div>Descricao da Campanha:</div>
+      <div><textarea id="view3DescricaoCampanha" type="text" style='height: 100px; width: 500px;'></textarea></div>
+    </div>
+    <div class='row'>
+        <div>Criada por:</div>
+    </div>
+    <div class="row">
+          <div class="col col-2">Meta(R$): <input id="view3MetaCampanha" type="number" min=0></div> 
+          <div class="col col-2">Data de Encerramento: <input id="view3DataCampanha" type="date" min="2019-11-20"></div>
+    </div>
+    <div class='row'>
         <button id="view3Button">Cadastrar Campanha</button>
-      </div>
+    </div>
   </div>
-
 </template>
+
+
+<template id ="campanha">
+    <div class = "teste">
+      <div class="row">
+        <div class='col col-2'><div>Nome da Campanha:<input value='Nome da Campanha' id="cNome" type="text" readonly='true'></div></div>
+      </div>
+      <div class="row">
+        <div >Descricao da Campanha:</div>
+        <div><textarea id="cDescricao" type="text" style='height: 100px; width: 500px;' readonly='true'></textarea></div>
+      </div>
+      <div class='row'>
+          <div class="col col-2">Criada por: <input id="cDono" type="text" min=0 readonly='true' width="auto"></div> 
+          <div class='col col-2'>Status:<input id="cStatus" type="text" readonly='true'></div>
+      </div>
+      <div class="row">
+            <div class="col col-2">Meta(R$): <input id="cMeta" type="number" min=0 readonly='true'></div> 
+            <div class="col col-2">Data de Encerramento: <input id="cData" type="date" min="2019-11-20" readonly='true'></div>
+      </div>
+      <div class='row'>
+          <div class="col">Total de Doações: <input id="cDoacao" type="number" min=0 readonly='true'></div> 
+      </div>
+      <div class='row'> 
+          <div class="col col-2">Likes: <input id="cLike" type="number" min=0 readonly='true'></div> 
+          <div class="col col-2"id='like'><button>Curtir</button></div>
+      </div>
+      <div class='row'>
+          <div id='espacoComentario' style="background: pink;">Espaço Reservado Para Comentario</div>
+          <!-- <div><textarea id="cComentarios" type="text" style='height: 100px; width: 500px;'></textarea></div> -->
+          <button id='comentarioButtom'>Comentar</button>
+      </div>
+    </div>
+  </template>
+
 
 <template id="pesquisaCampanhas"> 
     <h1>Pesquisar Campanha</h1>
@@ -82,13 +109,13 @@
     <button id="view4Button"> Pesquisar</button>
 </template>
 
-<template id="visualizaCampanha"> 
+<!-- <template id="visualizaCampanha"> 
   <h1 id="vNome">Nome</h1>
   <p id="vDescricao">Descricao</p>
   <p id="vMeta">Meta</p>
   <p id="vData">Data</p>
   <button id="criarCampanha"> Criar</button>
-</template>
+</template> -->
 
 <template id="home">
   <img src="cow.jpg" width="100%"  height="auto"/>
@@ -99,7 +126,8 @@
 </template>
  
 <template id="deslogar">
-  <p><a id="viewDeslogar">Você já esta logado,clique aqui para deslogar.</a></p>  
+  <p><a id="viewDeslogar">Você tem certeza que quer deslogar?</a></p>  
+  <button id="buttonDeslogar">Deslogar</button>
 </template>
 
 <template id="menu1">
@@ -137,28 +165,3 @@
     </table>
   </div>
 </template>
-
-<template id="campanha">
-  <div class = "viewCampanha">
-    <h1>Nome</h1>
-    <p id="cNome">Nome</p>
-
-    <h1>Descricao</h1>
-    <p id="cDescricao">Descricao</p>
-
-    <h1>Email do Dono</h1>
-    <p id="cDono">Dono</p>
-
-    <h1>Data</h1>
-    <p id="cData">Data Limite</p>
-
-    <h1>Status</h1>
-    <p id="cStatus">Status</p>    
-
-    <h1>Meta (R$)</h1>
-    <p id="cMeta">Meta</p>
-
-    <h1>Doacao (R$)</h1>
-    <p id="cDoacao">Doacao</p>
-  </div>
-  </template>

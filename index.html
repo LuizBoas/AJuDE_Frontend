@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header id="banner"></header>
+  <header id="banner" ><img src="c.png" width="100%"  height="auto"/></header>
   <div id="menu"></div>
   <div id="main">
     <img src="cow.jpg" width="100%"  height="auto"/>
@@ -15,5 +15,26 @@
 </body>
 <script type="module" src="app.js"></script>
 <script type="module" src="roteamento.js"></script>
-
 </html>
+
+<template id='comentario'>
+    <div>
+        <p id='usuarioComentario'></p>
+        <div id='textoComentario'></div>
+        <br>
+        <div class='botoesComentarios'>
+            <button class='responder_comentario'>Responder Comentário</button>
+        </div>
+    </div>
+</template>
+
+<template id='formato_novo_comentario'>
+    <div id='novo_comentario'>
+        <textarea id='texto_novo_comentario'></textarea>
+        <hr>
+        <div>
+            <button id='enviar_comentario'> Enviar Comentário </button>
+            <button id='cancelar_comentario'> Cancelar Comentário </button>
+        </div>
+    </div>
+</template>
