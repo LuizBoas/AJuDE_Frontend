@@ -1,51 +1,57 @@
-import * as poxa from "/app.js";
+import * as app from "/app.js";
 
 function roteamento(){
     geraMenu();
     let hash = location.hash;
     let link = hash.substring(1, hash.length);
-    // console.log("link: " + link);
-    if(link.includes("/campanha/")){
+    if(link.includes("/usuario/")){
+        let linkUsuario = link.substr(9);
+        app.perfil(linkUsuario);
+    }else if(link.includes("/campanha/")){
         let linkCampanha = link.substr(10);
         // console.log(linkCampanha);
-        poxa.campanha(linkCampanha);
+        app.campanha(linkCampanha);
     }else{
         switch(link){
             case "/login":
-                poxa.view2();
+                app.view2();
                 break;
             case "/cadastro":
-                poxa.view1();
+                app.view1();
                 break;
             case "/cadastroCampanha":
-                poxa.view3();
+                app.view3();
                 break;
             case "/pesquisaCampanhas":
-                poxa.view4();
+                app.view4();
                 break;
             case "/deslogar":
                 teste();
                 break;
+            case "/perfil":
+                location.hash = '#/usuario/' + (localStorage.getItem('email'))
+                break;
+            break;
             case "/visualizar":
                 break;
             default:
-                poxa.view5();
+                app.view5();
                 break;
         }
-    }
-    
+    }    
 }
+
 function geraMenu(){
-    fetch("http://localhost:8080/api", {
+    fetch("https://teste31102001.herokuapp.com/api", {
         'method':'GET',
         'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
         })
         .then(r => { 
             if(r.status==200){
-                poxa.viewMenu2();
+                app.viewMenu2();
 
             }else{
-                poxa.viewMenu1();
+                app.viewMenu1();
             }
             
         }
@@ -53,16 +59,16 @@ function geraMenu(){
 }
 
 function teste(){
-    fetch("http://localhost:8080/api", {
+    fetch("https://teste31102001.herokuapp.com/api", {
     'method':'GET',
     'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
     })
     .then(r => { 
                 if(r.status==200){
-                    poxa.viewDeslogar(); 
+                    app.viewDeslogar(); 
 
                 }else{
-                    poxa.view2();
+                    app.view2();
                 }
                 
             }

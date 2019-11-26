@@ -23,12 +23,12 @@
     <button id="view1Button">Salvar</button>
 </template>
 
-<!-- <template id="cadastroDeUsuariosRealizado">
+<template id="cadastroDeUsuariosRealizado">
   <div>
       <p>Cadastro realizado com sucesso!</p>
-          <button id="vaiParaLogin">Login</button>
+      <button id="vaiParaLogin">Login</button>
   </div>
-</template> -->
+</template>
 
 <template id= "loginDoUsuario">
   <div class="block">
@@ -42,7 +42,6 @@
     </div>
   </div>
 </template>
-
 
 <template id ="cadastroDeCampanhas">
   <div class = "teste">
@@ -58,7 +57,7 @@
     </div>
     <div class="row">
           <div class="col col-2">Meta(R$): <input id="view3MetaCampanha" type="number" min=0></div> 
-          <div class="col col-2">Data de Encerramento: <input id="view3DataCampanha" type="date" min="2019-11-20"></div>
+          <div class="col col-2">Data de Encerramento: <input id="view3DataCampanha" type="date"></div>
     </div>
     <div class='row'>
         <button id="view3Button">Cadastrar Campanha</button>
@@ -75,6 +74,8 @@
       <div class="row">
         <div >Descricao da Campanha:</div>
         <div><textarea id="cDescricao" type="text" style='height: 100px; width: 500px;' readonly='true'></textarea></div>
+        <div class='col col-2'><div>Encerar Campanha:<button id='cEncerrar'>Encerrar</button></div></div>
+
       </div>
       <div class='row'>
           <div class="col col-2">Criada por: <input id="cDono" type="text" min=0 readonly='true' width="auto"></div> 
@@ -99,6 +100,26 @@
     </div>
   </template>
 
+  <template id="perfil">
+    <div class = 'teste'>
+      <div class='row'>
+          <div class="col col-2"><div>Primeiro Nome:<input id="pPrimeiroNome" type="text" readonly='true'></div></div>
+          <div class="col col-2"><div>Ultimo Nome:<input id="pUltimoNome" type="text" readonly='true'></div></div>
+      </div>
+      <div class='row'>
+          <div class='col'><div>Email:<input id="pEmail" type="email" readonly='true'></div></div>
+      </div>
+    </div>
+    <table>
+        <tr>
+           <th>Nome</th>
+           <th>Data Limite</th>
+           <th>Status</th>
+           <th>Meta (R$)</th>
+           <th>Visualizar</th>
+         </tr>
+      </table>
+  </template>
 
 <template id="pesquisaCampanhas"> 
     <h1>Pesquisar Campanha</h1>
@@ -147,6 +168,7 @@
           <li><a href = "#/deslogar">Deslogar</a></li>
           <li><a href = "#/cadastroCampanha">Cadastrar Campanha</a></li>
           <li><a href = "#/pesquisaCampanhas">Pesquisa Campanha</a></li>
+          <li><a href = "#/perfil">Perfil</a></li>
         </ul>
       </div>
 </template>

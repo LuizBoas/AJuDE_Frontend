@@ -1,7 +1,9 @@
 let $main = document.querySelector('#main');
 let $menu = document.querySelector('#menu');
+let URI = 'http://localhost:8080';
+// https://teste31102001.herokuapp.com
 
-let newTemplate, resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha;
+let cadastroDeUsuariosRealizado, templatePerfil, resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha;
 
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
@@ -20,6 +22,8 @@ async function fetch_templates() {
   visualiza = e.querySelector('#visualizaCampanha');
   resultadoPesquisa = e.querySelector('#resultadoPesquisa');
   viewCampanha= e.querySelector('#campanha');
+  templatePerfil = e.querySelector('#perfil');
+  cadastroDeUsuariosRealizado = e.querySelector('#cadastroDeUsuariosRealizado');
 //   newTemplate = e.querySelector('#cadastro_campanha');
 }
 
@@ -72,7 +76,7 @@ export async function view2() {
         async function logaUsuario() {
                 let email = document.querySelector("#view2Email");
                 let senha = document.querySelector("#view2Senha");
-                let resposta = await fetch("http://localhost:8080/auth/login", {
+                let resposta = await fetch(URI + "/auth/login", {
                     'method': 'POST',
                     'body': `{"email": "${email.value}","senha": "${senha.value}" }`,
                     'headers': {'Content-Type': 'application/json'}
@@ -102,14 +106,14 @@ export async function view4(){
     $pesquisaButton.addEventListener('click', 
         async function pesquisaCampanhas(){
             let nome = document.querySelector('#view4Substring');
-            let resposta = await fetch(`http://localhost:8080/api/campanhas/pesquisar/${nome.value}`,{
+            let resposta = await fetch(URI + `/api/campanhas/pesquisar/${nome.value}`,{
                 'method':'GET',
                 'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
             })
             if(resposta.status==200){
                 let dado = await resposta.json();
                 localStorage.setItem("array", dado);
-                viewResultadoPesquisa(dado);
+                viewResultadoPesquisa(dado,0);
             }else{
                 alert("Campanha Nao Encontrada");
             }
@@ -118,8 +122,10 @@ export async function view4(){
     );
 }
 
-export async function viewResultadoPesquisa(dado){
-    $main.innerHTML+= resultadoPesquisa.innerHTML;
+export async function viewResultadoPesquisa(dado,arg){
+    if(arg==0){
+        $main.innerHTML+= resultadoPesquisa.innerHTML;
+    }
 
     let table = document.querySelector('table');
     dado.forEach(element => {
@@ -174,19 +180,29 @@ export async function view1(){
                 let ultimoNome = document.querySelector("#view1UltimoNome");
                 let cartaoCredito = document.querySelector("#view1CartaoCredito");
                 let senha = document.querySelector("#view1Senha");
-                let resposta = await fetch("http://localhost:8080/api/usuarios", {
+                let resposta = await fetch(URI + "/api/usuarios", {
                     'method': 'POST',
                     'body': `{"email": "${email.value}","primeiroNome": "${primeiroNome.value}","ultimoNome": "${ultimoNome.value}",
                     "cartaoCredito": "${cartaoCredito.value}","senha": "${senha.value}" }`,
                     'headers': {'Content-Type': 'application/json'}
                 })
                 if(resposta.status==200){
-                    alert("Usuario Cadastrado");
+                    cadastroRealizado();
                 }else{
-                    alert("Email já cadastrado");
+                    alert("Email Em Uso");
                 }
             }
         );
+}
+
+async function cadastroRealizado(){
+    let data = await Promise.resolve(fetch_templates());
+    let $template = cadastroDeUsuariosRealizado;
+    $main.innerHTML = $template.innerHTML;
+    let $loginButton = document.querySelector("#vaiParaLogin");
+        $loginButton.addEventListener('click', function (){
+            view2();
+        });
 }
 
 export async function view3(){
@@ -196,7 +212,10 @@ export async function view3(){
     let $template = template3;
     $main.innerHTML = $template.innerHTML;
 
-    document.querySelector('#view3DataCampanha').max = new Date();
+    let agora = new Date();
+    let hoje = agora.getFullYear() + '-' + (agora.getUTCMonth()+1) + '-' + agora.getDate();
+
+    document.querySelector('#view3DataCampanha').min = hoje;
 
 
     let $cadastraButton = document.querySelector("#view3Button");
@@ -213,7 +232,7 @@ export async function view3(){
             let urlCampanha = createURL(nomeCampanha.value);
             sessionStorage.setItem("urlCampanha", urlCampanha);
             localStorage.setItem("url", urlCampanha);
-            let resposta = await fetch("http://localhost:8080/api/campanhas", {
+            let resposta = await fetch(URI + "/api/campanhas", {
                 'method': 'POST',
                 'body': JSON.stringify({"nome": nomeCampanha.value,"descricao": descricaoCampanha.value,
                 "meta": metaCampanha.value,"data": dataCampanha.value,"url": urlCampanha, "email": localStorage.email}),
@@ -254,13 +273,17 @@ export async function view3(){
 }
 
 export async function campanha(url){
-    let resposta = await fetch(`http://localhost:8080/api/campanhas/${url}`, {
+    let data = await Promise.resolve(fetch_templates());
+
+    let resposta = await fetch(URI + `/api/campanhas/${url}`, {
                     'method': 'GET',
                     'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
     })
     if(resposta.status==200){
         location.hash = `#/campanha/${url}`;
         localStorage.setItem('hash', url);
+
+        fetch_templates
         let $template = viewCampanha;
         $main.innerHTML = $template.innerHTML;
         let dado = await resposta.json();
@@ -285,7 +308,7 @@ export async function campanha(url){
         let $likeButtom = document.querySelector("#like");
         $likeButtom.addEventListener('click', 
             async function darLike(){
-                let resposta2 = await fetch(`http://localhost:8080/like/${dado.id}`,{
+                let resposta2 = await fetch(URI + `/like/${dado.id}`,{
                     'method':'GET',
                     'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
                 })
@@ -296,6 +319,11 @@ export async function campanha(url){
                 }
         });
 
+        let enceraButton = document.querySelector('#cEncerrar');
+        enceraButton.addEventListener('click', function encerrar(){
+            deletar(dado);
+        })
+
         let $comentarioButtom = document.querySelector("#comentarioButtom");
         $comentarioButtom.addEventListener('click',
             async function escreverComentario(){
@@ -303,12 +331,11 @@ export async function campanha(url){
                 let novoComentario = document.querySelector('#formato_novo_comentario');
                 espacoComentario.innerHTML += novoComentario.innerHTML;
                 $comentarioButtom.removeEventListener('click', escreverComentario);
-                //topzada
                 let $Button = document.querySelector('#enviar_comentario');
                 $Button.addEventListener('click', 
                     async function enviarComentario(){
                         let novo_texto = document.querySelector('#texto_novo_comentario');
-                        let resposta3 = await fetch(`http://localhost:8080/comentaCampanha`,{
+                        let resposta3 = await fetch(URI + `/comentaCampanha`,{
                             'method':'POST',
                             'body':`{"idCampanha": "${dado.id}","comentario": "${novo_texto.value}","email": "${localStorage.getItem('email')}" }`,
                             'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
@@ -328,18 +355,25 @@ export async function campanha(url){
                 let div_comentario = criaComentario(comentario);
                 let respostas = comentario.resposta;
                 let retorno = visualizacaoRecursiva(div_comentario,respostas);
-                // if(respostas.length>0){
-                //     respostas.forEach(newComentario => {
-                //         let div_reposta = criaComentario(newComentario);
-                //         console.log(div_reposta.caixa)
-                //         div_comentario.caixa.appendChild(div_reposta.caixa);
-                //     });
-                // }
                 espacoComentario.appendChild(div_comentario.caixa);
             });
         }
     }else{
         alert("Erro");
+    }
+}
+
+async function deletar(dado){
+    let id = dado.id;
+    let reposta = await fetch(URI + `//api/campanhas/encerar/${id}`, {
+        'method':'PUT',
+        'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+    })
+    if(reposta.status==200){
+        alert('Campanha Encerrada')
+        campanha(dado.url);
+    }else{
+        alert('Você Não Possui Autorização Para Encerrar a Campanha');
     }
 }
 
@@ -375,68 +409,99 @@ function criaComentario(comentario){
         c.textoComentario.innerHTML = comentario.comentario;
         c.botaoEnviarComentario = c.botoes.children[0];
     };
-
     preenche();
+
+    if(localStorage.getItem('email') == comentario.usuario.email){
+        let deletarComentario = document.createElement('button');
+        deletarComentario.innerText = 'Deletar Comentário';
+        c.botaoDeletarComentario = deletarComentario;
+        c.botoes.appendChild(deletarComentario);
+
+        let idComentario = c.objetoComentario.id;
+
+        c.botaoDeletarComentario.addEventListener('click', 
+            async function fetch_cadastro_usuario(){
+                let resposta = await fetch(URI + `/apagarComentario/${idComentario}/`,{
+                    "method":"DELETE",
+                    'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+                });
+                console.log(resposta)
+                let dados = await resposta.json();
+                if(resposta.status == 200){
+                    alert("Seu Comentario Foi Apagado!");
+                    campanha(localStorage.getItem('hash'));
+                }
+            }
+        );
+    }
 
     c.botaoEnviarComentario.addEventListener('click', 
     async function escreverComentario(){
         let espacoComentario = c.caixa;
         let novoComentario = document.querySelector('#formato_novo_comentario');
         espacoComentario.innerHTML += novoComentario.innerHTML;
-        //topzada
 
         let buttonEnviar = document.querySelector('#enviar_comentario');
         buttonEnviar.addEventListener('click', 
         async function enviarComentario(){
             let novo_texto = document.querySelector('#texto_novo_comentario');
-            let resposta3 = await fetch(`http://localhost:8080/comentaComentario`,{
+            let resposta3 = await fetch(URI + `/comentaComentario`,{
                 'method':'POST',
                 'body':`{"idCampanha": "${comentario.id}","comentario": "${novo_texto.value}","email": "${localStorage.getItem('email')}" }`,
                 'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
-            })
+                })
             if(resposta3.status==200){
                 alert("Seu comentário foi registrado!");
                 campanha(localStorage.getItem('hash'));
+                }
             }
-        }
         ) 
     })
     c.caixa.classList.add('caixa_comentario');
     return c;
 }
 
+export async function perfil(email){
+    let data = await Promise.resolve(fetch_templates());
+    location.hash = `#/usuario/${email}`;
 
-// async function comentarioComentario(comentario){
-//     let template = document.querySelector('#formato_novo_comentario');
-//     let caixa_comentario = document.createElement('div');
-//     caixa_comentario.innerHTML = template.innerHTML;
-//     let c ={
-//         objetoComentario: comentario,
-//         caixa: caixa_comentario.children[0]
-//     };
+    let $template = templatePerfil;
+        $main.innerHTML = $template.innerHTML;
 
-//     c.caixaTexto = c.caixa.children[0];
-//     c.botoes = c.caixa.children[1];
-//     c.botaoEnviarComentario = c.botoes.children[0];
+    let resposta = await fetch(URI + `//usuarios/${email}`, {
+        'method': 'GET',
+        'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+    })
+    if(resposta.status==200){
+        let dado = await resposta.json();
+        let primeiroNome = document.querySelector("#pPrimeiroNome");
+        primeiroNome.value = dado.primeiroNome;
+        let ultimoNome = document.querySelector("#pUltimoNome");
+        ultimoNome.value = dado.ultimoNome;
+        let email = document.querySelector("#pEmail");
+        email.value = dado.email;
 
+        let resposta2 = await fetch(URI + `/api/campanhas/usuario/${dado.email}`, {
+            'method': 'GET',
+            'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+        })
 
-//     c.botaoEnviarComentario.addEventListener('click', function enviarComentario(){
+        if(resposta2.status==200){
+            let dado2 = await resposta2.json();
+            viewResultadoPesquisa(dado2,1);
+        }else{
+            let table = document.querySelector('table');
+            let linha = document.createElement('tr');
+            let nome = document.createElement('td');
+            nome.innerText = 'Usuario Não Possui Campanhas Ativas';
+            linha.appendChild(nome);
+            table.appendChild(linha);
+        }
 
-//         async function comentarComentario(){
-//             let texto = c.caixaTexto.value;
-            
-//             let id = comentario.objetoComentario.id;
-//             console.log(texto) 
-//         }
-
-//     })
-// }
-
-
-
-
-
-
+    }else{
+        alert('Usuario Não Encontrado')
+    }
+}
 
 // export async function visualizar(){
 //     let data = await Promise.resolve(fetch_templates());
