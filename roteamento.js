@@ -32,9 +32,6 @@ function roteamento(){
             case "/perfil":
                 location.hash = '#/usuario/' + (localStorage.getItem('email'))
                 break;
-            break;
-            case "/visualizar":
-                break;
             default:
                 app.view5();
                 break;

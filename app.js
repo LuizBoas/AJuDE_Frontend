@@ -62,12 +62,79 @@ export async function view5(){
 
     let $template = templateHome;
     $main.innerHTML = $template.innerHTML;
+
+    let $button1= document.querySelector('#ordenaMeta');
+    $button1.addEventListener('click', 
+        async function(){
+            localStorage.setItem('atributo', 'meta');
+            view5();
+        });
+
+    let $button2= document.querySelector('#ordenaLike');
+    $button2.addEventListener('click', 
+    async function(){
+        localStorage.setItem('atributo', 'like');
+        view5();
+    });
+
+    let $button3= document.querySelector('#ordenaTempo');
+    $button3.addEventListener('click', 
+    async function(){
+        localStorage.setItem('atributo', 'data');
+        view5();
+    });
+
+    if(localStorage.getItem('atributo')==null){
+        localStorage.setItem('atributo', 'meta');
+    }
+
+    let reposta = await fetch(URI + '/api/ordena/'+ localStorage.getItem('atributo'),{
+        'method': 'GET',
+        'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+    }); 
+
+    let dado = await reposta.json();
+    let table = document.querySelector('#homeTable');
+    dado.forEach(element => {
+        let linha = document.createElement('tr');
+
+        let nome = document.createElement('td');
+        nome.innerText = element.nome;
+
+        let data = document.createElement('td');
+        data.innerText = element.data;
+
+        let status = document.createElement('td');
+        status.innerText = element.status;
+
+        let meta = document.createElement('td');
+        meta.innerText = element.meta + '/' + element.doacao;
+
+        let visualizar = document.createElement('td');
+
+        let botao = document.createElement('button');
+        botao.innerText = 'Visualizar detalhes';
+
+        botao.addEventListener('click', function chama(){
+            campanha(element.url);
+        })
+
+        visualizar.appendChild(botao);
+
+        linha.appendChild(nome);
+        linha.appendChild(data);
+        linha.appendChild(status);
+        linha.appendChild(meta);
+
+        linha.appendChild(visualizar);
+        table.appendChild(linha);
+    });
 }
 
 export async function view2() {
     let data = await Promise.resolve(fetch_templates());
     location.hash = "#/login";
-
+    localStorage.setItem('atributo', 'meta');
     let $template = template2;
     $main.innerHTML = $template.innerHTML;
 
@@ -251,25 +318,6 @@ export async function view3(){
 
         }
     );
-
-    // let $visualizaButton = document.querySelector("#visualizar");
-    // $visualizaButton.addEventListener('click', 
-    //     async function visualizaCampanha() {
-    //         let nomeCampanha = document.querySelector("#view3NomeCampanha");
-    //         sessionStorage.setItem("nomeCampanha", nomeCampanha.value);
-    //         let descricaoCampanha = document.querySelector("#view3DescricaoCampanha");
-    //         sessionStorage.setItem("descricaoCampanha", descricaoCampanha.value);
-    //         let metaCampanha = document.querySelector("#view3MetaCampanha");
-    //         sessionStorage.setItem("metaCampanha", metaCampanha.value);
-    //         let dataCampanha = document.querySelector("#view3DataCampanha");
-    //         sessionStorage.setItem("dataCampanha", dataCampanha.value);
-    //         let urlCampanha = createURL(nomeCampanha.value);
-    //         sessionStorage.setItem("urlCampanha", urlCampanha);
-    //         visualizar()
-    //     }
-
-    // );
-
 }
 
 export async function campanha(url){
@@ -539,27 +587,6 @@ export async function perfil(email){
     }
 }
 
-// export async function visualizar(){
-//     let data = await Promise.resolve(fetch_templates());
-//     location.hash = "#/visualizar";
-
-//     let $template = visualiza;
-//     $main.innerHTML = $template.innerHTML;
-
-//     let nomeDaCampanha = document.querySelector('#vNome');
-//     nomeDaCampanha.innerText = sessionStorage.getItem("nomeCampanha");
-//     let descicaoDaCampanha = document.querySelector('#vDescricao');
-//     descicaoDaCampanha.innerText = sessionStorage.getItem("descricaoCampanha");
-//     let metaDaCampanha = document.querySelector('#vMeta');
-//     metaDaCampanha.innerText = sessionStorage.getItem("metaCampanha");
-//     let dataDaCampanha = document.querySelector('#vData');
-//     dataDaCampanha.innerText = sessionStorage.getItem("dataCampanha");
-//     // $template.innerHTML= "<h1>teste<h1>"
-//     // $main.innerHTML = $template.innerHTML;
-
-//     console.log($template);
-// }
-
 function createURL (text){     
     text = text.toLowerCase();                                                           
     text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
@@ -572,3 +599,4 @@ function createURL (text){
     text = text.replace(new RegExp('[,]','gi'), '');
     return text;                 
 }
+

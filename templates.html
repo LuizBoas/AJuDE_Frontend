@@ -20,7 +20,7 @@
       Senha:
       <input id="view1Senha" type="password" required='required'>
     </p>    
-    <button id="view1Button">Salvar</button>
+    <button id="view1Button" style="display: table;">Salvar</button>
 </template>
 
 <template id="cadastroDeUsuariosRealizado">
@@ -37,7 +37,7 @@
       <div>
       <p>Email:<input id="view2Email" type="email"></p>
       <p>Senha:<input id="view2Senha" type="password"></p>
-      <button id="view2Button">Logar</button>
+      <button id="view2Button" style="display: table;">Logar</button>
     </div>
     </div>
   </div>
@@ -60,11 +60,10 @@
           <div class="col col-2">Data de Encerramento: <input id="view3DataCampanha" type="date"></div>
     </div>
     <div class='row'>
-        <button id="view3Button">Cadastrar Campanha</button>
+        <button id="view3Button" >Cadastrar Campanha</button>
     </div>
   </div>
 </template>
-
 
 <template id ="campanha">
     <div class = "teste">
@@ -132,19 +131,36 @@
       Insira o nome da Campanha:
       <input id="view4Substring" type="text">
     </p>
-    <button id="view4Button"> Pesquisar</button>
+    <button id="view4Button" style='display: table'>Pesquisar</button>
 </template>
 
-<!-- <template id="visualizaCampanha"> 
-  <h1 id="vNome">Nome</h1>
-  <p id="vDescricao">Descricao</p>
-  <p id="vMeta">Meta</p>
-  <p id="vData">Data</p>
-  <button id="criarCampanha"> Criar</button>
-</template> -->
-
 <template id="home">
-  <img src="cow.jpg" width="100%"  height="auto"/>
+    <div class='teste'>
+      <img src="cow.jpg" width="100%"  height="auto"/>
+      <div class='row'>
+          <div class='col col-2'><div></div></div>
+          <div class='col col-2'>Campanhas em Alta:</div>
+          <div class='col col-2'><div></div></div>
+      </div>
+      <div>
+          <div class='col col-2'>Ordenar Por:</div>
+          <div class='col col-2'><button id='ordenaMeta'>Meta</button></div>
+          <div class='col col-2'><button id='ordenaLike'>Like</button></div>
+          <div class='col col-2'><button id='ordenaTempo'>Tempo</button></div>
+          <div class='col col-2'><div></div></div>
+        </div>
+      <div class='row'>
+          <table id='homeTable'> 
+              <tr>
+                 <th>Nome</th>
+                 <th>Data Limite</th>
+                 <th>Status</th>
+                 <th>Meta (R$) /Doação (R$)</th>
+                 <th>Visualizar</th>
+               </tr>
+          </table>
+      </div> 
+  </div>
 </template>
 
 <template id="logar">
@@ -152,8 +168,12 @@
 </template>
  
 <template id="deslogar">
-  <p><a id="viewDeslogar">Você tem certeza que quer deslogar?</a></p>  
-  <button id="buttonDeslogar">Deslogar</button>
+  <div class='teste'>
+    <dic calss='row'>
+        <div class= "col">Você tem certeza que quer deslogar?</div>
+        <div class= "col"><button style='display: table'  id="buttonDeslogar">Deslogar</button></div>
+    </dic>
+  </div>
 </template>
 
 <template id="menu1">
