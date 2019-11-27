@@ -141,7 +141,7 @@ export async function viewResultadoPesquisa(dado,arg){
         status.innerText = element.status;
 
         let meta = document.createElement('td');
-        meta.innerText = element.meta;
+        meta.innerText = element.meta + '/' + element.doacao;
 
         let visualizar = document.createElement('td');
 
@@ -319,6 +319,42 @@ export async function campanha(url){
                 }
         });
 
+        let doacaoButton = document.querySelector('#doacaoButton');
+        doacaoButton.addEventListener('click',
+            async function realizarDoacao(){
+                let templateDoacao = document.querySelector('#caixaDoacao');
+                let divDoacao = document.querySelector('#divDoacao');
+                divDoacao.innerHTML = templateDoacao.innerHTML;
+
+                let buttonEnviar = document.querySelector('#donation');
+                buttonEnviar.addEventListener('click', 
+                    async function enviarDoacao(){
+                        localStorage.setItem('quantia', dado.doacao);
+                        let valorDoacao = document.querySelector('#inputDoacao');
+                        let agora = new Date();
+                        let hoje = agora.getFullYear() + '-' + (agora.getUTCMonth()+1) + '-' + agora.getDate();
+                        let resposta2 = await fetch(URI + '/doacao', {
+                            'method':'POST',
+                            'body': `{"valor": ${valorDoacao.value}, "idCampanha": ${dado.id}, "data" : "${hoje}"}`,
+                            'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+                        });
+                        if(resposta2.status==200){
+                            let dadoDoacao = await resposta2.json();
+                            alert('DOACAO REALIZADA');
+                            if(localStorage.getItem('quantia')<dadoDoacao.meta){
+                                if(dadoDoacao.doacao>=dadoDoacao.meta){
+                                    alert('Parabéns Com Sua Doação a Campanha Atingiu a Meta');
+                                }
+                            }
+                            campanha(url);
+                        }else{
+                            alert('DOACAO NAO REALIZADA, TENTE NOVAMENTE');
+                        }
+                    }
+                )
+            }
+        );
+
         let enceraButton = document.querySelector('#cEncerrar');
         enceraButton.addEventListener('click', function encerrar(){
             deletar(dado);
@@ -359,7 +395,7 @@ export async function campanha(url){
             });
         }
     }else{
-        alert("Erro");
+        alert("Você Precisa Está Logado!");
     }
 }
 

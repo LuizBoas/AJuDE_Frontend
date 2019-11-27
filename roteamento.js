@@ -1,4 +1,5 @@
 import * as app from "/app.js";
+let URI = 'http://localhost:8080';
 
 function roteamento(){
     geraMenu();
@@ -42,7 +43,7 @@ function roteamento(){
 }
 
 function geraMenu(){
-    fetch("https://teste31102001.herokuapp.com/api", {
+    fetch(URI + "/api", {
         'method':'GET',
         'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
         })
@@ -59,7 +60,7 @@ function geraMenu(){
 }
 
 function teste(){
-    fetch("https://teste31102001.herokuapp.com/api", {
+    fetch(URI + "/api", {
     'method':'GET',
     'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
     })
