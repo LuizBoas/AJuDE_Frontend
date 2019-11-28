@@ -26,7 +26,7 @@
 <template id="cadastroDeUsuariosRealizado">
   <div>
       <p>Cadastro realizado com sucesso!</p>
-      <button id="vaiParaLogin">Login</button>
+      <button id="vaiParaLogin" style="display: table;">Login</button>
   </div>
 </template>
 
@@ -43,32 +43,10 @@
   </div>
 </template>
 
-<template id ="cadastroDeCampanhas">
-  <div class = "teste">
-    <div class="row">
-      <div class='col'><div>Nome da Campanha:<input id="view3NomeCampanha" type="text"></div></div>
-    </div>
-    <div class="row">
-      <div>Descricao da Campanha:</div>
-      <div><textarea id="view3DescricaoCampanha" type="text" style='height: 100px; width: 500px;'></textarea></div>
-    </div>
-    <div class='row'>
-        <div>Criada por:</div>
-    </div>
-    <div class="row">
-          <div class="col col-2">Meta(R$): <input id="view3MetaCampanha" type="number" min=0></div> 
-          <div class="col col-2">Data de Encerramento: <input id="view3DataCampanha" type="date"></div>
-    </div>
-    <div class='row'>
-        <button id="view3Button" >Cadastrar Campanha</button>
-    </div>
-  </div>
-</template>
-
 <template id ="campanha">
-    <div class = "teste">
+    <div class = "teste" id=maiorDiv>
       <div class="row">
-        <div class='col col-2'><div>Nome da Campanha:<input value='Nome da Campanha' id="cNome" type="text" readonly='true'></div></div>
+        <div class='col col-2'><div>Nome da Campanha:<input id="cNome" type="text" readonly='true'></div></div>
       </div>
       <div class="row">
         <div >Descricao da Campanha:</div>
@@ -77,7 +55,7 @@
 
       </div>
       <div class='row'>
-          <div class="col col-2">Criada por: <input id="cDono" type="text" min=0 readonly='true' width="auto"></div> 
+          <div class="col col-2">Criada por: <input id="cDono" type="text" readonly='true'></div> 
           <div class='col col-2'>Status:<input id="cStatus" type="text" readonly='true'></div>
       </div>
       <div class="row">
@@ -98,32 +76,31 @@
     </div>
       <div class='row'>
           <div id='espacoComentario'>Espaço Reservado Para Comentario</div>
-          <!-- <div><textarea id="cComentarios" type="text" style='height: 100px; width: 500px;'></textarea></div> -->
           <button id='comentarioButtom'>Comentar</button>
       </div>
     </div>
   </template>
 
-  <template id="perfil">
-    <div class = 'teste'>
-      <div class='row'>
-          <div class="col col-2"><div>Primeiro Nome:<input id="pPrimeiroNome" type="text" readonly='true'></div></div>
-          <div class="col col-2"><div>Ultimo Nome:<input id="pUltimoNome" type="text" readonly='true'></div></div>
-      </div>
-      <div class='row'>
-          <div class='col'><div>Email:<input id="pEmail" type="email" readonly='true'></div></div>
-      </div>
+<template id="perfil">
+  <div class = 'teste'>
+    <div class='row'>
+      <div class="col col-2"><div>Primeiro Nome:<input id="pPrimeiroNome" type="text" readonly='true'></div></div>
+      <div class="col col-2"><div>Ultimo Nome:<input id="pUltimoNome" type="text" readonly='true'></div></div>
     </div>
-    <table>
-        <tr>
-           <th>Nome</th>
-           <th>Data Limite</th>
-           <th>Status</th>
-           <th>Meta (R$) /Doação (R$)</th>
-           <th>Visualizar</th>
-         </tr>
-      </table>
-  </template>
+    <div class='row'>
+      <div class='col'><div>Email:<input id="pEmail" type="email" readonly='true'></div></div>
+    </div>
+  </div>
+  <table>
+    <tr>
+      <th>Nome</th>
+      <th>Data Limite</th>
+      <th>Status</th>
+      <th>Meta (R$) /Doação (R$)</th>
+      <th>Visualizar</th>
+    </tr>
+  </table>
+</template>
 
 <template id="pesquisaCampanhas"> 
     <h1>Pesquisar Campanha</h1>
@@ -171,9 +148,10 @@
   <div class='teste'>
     <dic calss='row'>
         <div class= "col">Você tem certeza que quer deslogar?</div>
-        <div class= "col"><button style='display: table'  id="buttonDeslogar">Deslogar</button></div>
     </dic>
   </div>
+  <button style="display: table;"  id="buttonDeslogar">Deslogar</button>
+
 </template>
 
 <template id="menu1">
@@ -212,3 +190,15 @@
     </table>
   </div>
 </template>
+
+<template id='templateNewButton'>
+  <div>
+    <button id='newButton' style="display: table;">Cadastrar Campanha</button>
+  </div>
+</template>
+
+<template id='habilitarEdicao'>
+    <div>
+      <button id='newButton' style="display: table;">Habilitar Edição</button>
+    </div>
+  </template>

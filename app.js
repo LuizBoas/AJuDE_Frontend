@@ -3,7 +3,7 @@ let $menu = document.querySelector('#menu');
 let URI = 'http://localhost:8080';
 // https://teste31102001.herokuapp.com
 
-let cadastroDeUsuariosRealizado, templatePerfil, resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha;
+let cadastroDeUsuariosRealizado,habilitarEdicao, templatePerfil, resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha, newButton;
 
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
@@ -23,8 +23,9 @@ async function fetch_templates() {
   resultadoPesquisa = e.querySelector('#resultadoPesquisa');
   viewCampanha= e.querySelector('#campanha');
   templatePerfil = e.querySelector('#perfil');
+  newButton = e.querySelector('#templateNewButton');
+  habilitarEdicao= e.querySelector('#habilitarEdicao');
   cadastroDeUsuariosRealizado = e.querySelector('#cadastroDeUsuariosRealizado');
-//   newTemplate = e.querySelector('#cadastro_campanha');
 }
 
 export async function viewMenu1(){
@@ -276,46 +277,51 @@ export async function view3(){
     let data = await Promise.resolve(fetch_templates());
     location.hash = "#/cadastroCampanha";
 
-    let $template = template3;
+    let $template = viewCampanha;
+    let button = newButton;
+    $template.innerHTML+= button.innerHTML;
     $main.innerHTML = $template.innerHTML;
 
     let agora = new Date();
     let hoje = agora.getFullYear() + '-' + (agora.getUTCMonth()+1) + '-' + agora.getDate();
 
-    document.querySelector('#view3DataCampanha').min = hoje;
+    let nomeCampanha = document.querySelector("#cNome");
+    let descricaoCampanha = document.querySelector("#cDescricao");
+    let metaCampanha = document.querySelector("#cMeta");
+    let dataCampanha = document.querySelector("#cData");
 
+    nomeCampanha.removeAttribute('readonly');
+    descricaoCampanha.removeAttribute('readonly');
+    metaCampanha.removeAttribute('readonly');
+    dataCampanha.removeAttribute('readonly');
 
-    let $cadastraButton = document.querySelector("#view3Button");
+    let donoCampanha = document.querySelector("#cDono");
+    donoCampanha.value = localStorage.getItem('email');
+
+    let statusCampanha = document.querySelector('#cStatus');
+    statusCampanha.value = "ATIVA";
+
+    document.querySelector('#cData').min = hoje;
+
+    let $cadastraButton = document.querySelector("#newButton");
     $cadastraButton.addEventListener('click', 
         async function cadastraCampanha(){
-            let nomeCampanha = document.querySelector("#view3NomeCampanha");
-            sessionStorage.setItem("nomeCampanha", nomeCampanha.value);
-            let descricaoCampanha = document.querySelector("#view3DescricaoCampanha");
-            sessionStorage.setItem("descricaoCampanha", descricaoCampanha.value);
-            let metaCampanha = document.querySelector("#view3MetaCampanha");
-            sessionStorage.setItem("metaCampanha", metaCampanha.value);
-            let dataCampanha = document.querySelector("#view3DataCampanha");
-            sessionStorage.setItem("dataCampanha", dataCampanha.value);
             let urlCampanha = createURL(nomeCampanha.value);
-            sessionStorage.setItem("urlCampanha", urlCampanha);
             localStorage.setItem("url", urlCampanha);
             let resposta = await fetch(URI + "/api/campanhas", {
                 'method': 'POST',
                 'body': JSON.stringify({"nome": nomeCampanha.value,"descricao": descricaoCampanha.value,
-                "meta": metaCampanha.value,"data": dataCampanha.value,"url": urlCampanha, "email": localStorage.email}),
+                "meta": metaCampanha.value,"data": dataCampanha.value,"url": urlCampanha, "email": localStorage.getItem('email')}),
                 'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
             })
             if(resposta.status==200){
-                let dado = await resposta.json();
                 alert(`Capanha Criada, compartilhe sua campanha: localhost:8000/#/campanha/${urlCampanha}`);
-                //deveria ser 409 mas ta dando 500
+                campanha(urlCampanha);
             }else if(resposta.status==500){
                 alert("Erro ao Criar a Campanha, Nome de Camapanha Já Cadastrado");
             }else{
-                // console.log(resposta.status);
                 alert("Erro ao criar a Campanha");
             }
-
         }
     );
 }
@@ -333,8 +339,17 @@ export async function campanha(url){
 
         fetch_templates
         let $template = viewCampanha;
-        $main.innerHTML = $template.innerHTML;
+        let $habilitarEdicao = habilitarEdicao;
         let dado = await resposta.json();
+
+        if(dado.dono.email==localStorage.getItem('email')){
+            $habilitarEdicao.innerHTML+=$template.innerHTML;
+            $main.innerHTML = $habilitarEdicao.innerHTML;
+        }else{
+            $main.innerHTML = $template.innerHTML;
+
+        }
+
 
         let cNome = document.querySelector('#cNome');
         cNome.value = dado.nome;
