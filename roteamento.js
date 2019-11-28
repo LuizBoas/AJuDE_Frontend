@@ -1,5 +1,5 @@
 import * as app from "/app.js";
-let URI = 'http://localhost:8080';
+let URI = 'https://teste31102001.herokuapp.com';
 
 function roteamento(){
     geraMenu();
