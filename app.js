@@ -3,7 +3,7 @@ let $menu = document.querySelector('#menu');
 let URI = 'http://localhost:8080';
 // https://teste31102001.herokuapp.com
 
-let cadastroDeUsuariosRealizado,habilitarEdicao, templatePerfil, resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha, newButton;
+let cadastroDeUsuariosRealizado, salvarAlteracao,habilitarEdicao, templatePerfil, resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha, newButton;
 
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
@@ -26,6 +26,7 @@ async function fetch_templates() {
   newButton = e.querySelector('#templateNewButton');
   habilitarEdicao= e.querySelector('#habilitarEdicao');
   cadastroDeUsuariosRealizado = e.querySelector('#cadastroDeUsuariosRealizado');
+  salvarAlteracao = e.querySelector('#salvarAlteracao');
 }
 
 export async function viewMenu1(){
@@ -60,7 +61,6 @@ function deslogar(){
 export async function view5(){
     let data = await Promise.resolve(fetch_templates());
     location.hash = "#/home";
-
     let $template = templateHome;
     $main.innerHTML = $template.innerHTML;
 
@@ -73,16 +73,16 @@ export async function view5(){
 
     let $button2= document.querySelector('#ordenaLike');
     $button2.addEventListener('click', 
-    async function(){
-        localStorage.setItem('atributo', 'like');
-        view5();
+        async function(){
+            localStorage.setItem('atributo', 'like');
+            view5();
     });
 
     let $button3= document.querySelector('#ordenaTempo');
     $button3.addEventListener('click', 
-    async function(){
-        localStorage.setItem('atributo', 'data');
-        view5();
+        async function(){
+            localStorage.setItem('atributo', 'data');
+            view5();
     });
 
     if(localStorage.getItem('atributo')==null){
@@ -93,7 +93,6 @@ export async function view5(){
         'method': 'GET',
         'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
     }); 
-
     let dado = await reposta.json();
     let table = document.querySelector('#homeTable');
     dado.forEach(element => {
@@ -340,16 +339,36 @@ export async function campanha(url){
         fetch_templates
         let $template = viewCampanha;
         let $habilitarEdicao = habilitarEdicao;
+        let $salvarAlteracao = salvarAlteracao;
         let dado = await resposta.json();
 
         if(dado.dono.email==localStorage.getItem('email')){
             $habilitarEdicao.innerHTML+=$template.innerHTML;
+            $habilitarEdicao.innerHTML+=$salvarAlteracao.innerHTML;
             $main.innerHTML = $habilitarEdicao.innerHTML;
+
+            let $editButton= document.querySelector('#editButton');
+            $editButton.addEventListener('click', function editarDescricao(){
+                alert('Descrição Agora Pode Ser Alterada, Você Pode Salvar Sua Alteração no Final da Página.');
+                    let cDescricao = document.querySelector('#cDescricao');
+                    cDescricao.removeAttribute('readonly');
+                    let $salvarButton= document.querySelector('#salvarButton');
+                    $salvarButton.addEventListener('click', 
+                        async function enviarAlteracao(){
+                            let resposta4 = await fetch(URI + `/api/campanhas/setDescricao/${dado.id}`, {
+                                'method':'PUT',
+                                'body': `${cDescricao.value}`,
+                                'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
+                            });
+                            if(resposta4.status==200){
+                                alert('Alteração Realizada.')
+                                campanha(url);
+                            }
+                    })
+            })
         }else{
             $main.innerHTML = $template.innerHTML;
-
         }
-
 
         let cNome = document.querySelector('#cNome');
         cNome.value = dado.nome;
@@ -417,7 +436,6 @@ export async function campanha(url){
                 )
             }
         );
-
         let enceraButton = document.querySelector('#cEncerrar');
         enceraButton.addEventListener('click', function encerrar(){
             deletar(dado);
@@ -574,11 +592,11 @@ export async function perfil(email){
     if(resposta.status==200){
         let dado = await resposta.json();
         let primeiroNome = document.querySelector("#pPrimeiroNome");
-        primeiroNome.value = dado.primeiroNome;
+        primeiroNome.innerText = 'Nome: ' + dado.primeiroNome;
         let ultimoNome = document.querySelector("#pUltimoNome");
-        ultimoNome.value = dado.ultimoNome;
+        ultimoNome.innerText = dado.ultimoNome;
         let email = document.querySelector("#pEmail");
-        email.value = dado.email;
+        email.innerText = 'Email:' + dado.email;
 
         let resposta2 = await fetch(URI + `/api/campanhas/usuario/${dado.email}`, {
             'method': 'GET',
@@ -614,4 +632,3 @@ function createURL (text){
     text = text.replace(new RegExp('[,]','gi'), '');
     return text;                 
 }
-

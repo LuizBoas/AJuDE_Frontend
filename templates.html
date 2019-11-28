@@ -84,11 +84,11 @@
 <template id="perfil">
   <div class = 'teste'>
     <div class='row'>
-      <div class="col col-2"><div>Primeiro Nome:<input id="pPrimeiroNome" type="text" readonly='true'></div></div>
-      <div class="col col-2"><div>Ultimo Nome:<input id="pUltimoNome" type="text" readonly='true'></div></div>
+      <div class="col col-2" id="pPrimeiroNome"></div>
+      <div class="col col-2" id="pUltimoNome"></div>
     </div>
     <div class='row'>
-      <div class='col'><div>Email:<input id="pEmail" type="email" readonly='true'></div></div>
+      <div class='col' id="pEmail"></div>
     </div>
   </div>
   <table>
@@ -199,6 +199,12 @@
 
 <template id='habilitarEdicao'>
     <div>
-      <button id='newButton' style="display: table;">Habilitar Edição</button>
+      <button id='editButton' style="display: table;">Habilitar Edição</button>
     </div>
   </template>
+
+  <template id='salvarAlteracao'>
+      <div>
+        <button id='salvarButton' style="display: table;">Salvar Edição</button>
+      </div>
+    </template>
