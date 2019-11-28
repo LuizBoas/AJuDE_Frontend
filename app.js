@@ -1,25 +1,27 @@
 let $main = document.querySelector('#main');
 let $menu = document.querySelector('#menu');
+
+/**
+ * URI da aplicacao backend
+ */
 let URI = 'https://teste31102001.herokuapp.com';
-// let URI = 'http://localhost:8080'
 
-let cadastroDeUsuariosRealizado, salvarAlteracao,habilitarEdicao, templatePerfil, resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha, newButton;
+let cadastroDeUsuariosRealizado, salvarAlteracao,habilitarEdicao, templatePerfil, resultadoPesquisa, template1, template2, template4, templateHome, templateDeslogar, menu1, menu2, viewCampanha, newButton;
 
+/**
+ * Funcao que carrega os templates do arquivo templates.html
+ */
 async function fetch_templates() {
   let html_templates = await (fetch('templates.html').then(r => r.text()));
   let e = document.createElement("div");
   e.innerHTML = html_templates;
   template1 = e.querySelector('#cadastroDeUsuarios');
   template2 = e.querySelector('#loginDoUsuario');
-  template3 = e.querySelector('#cadastroDeCampanhas');
   template4 = e.querySelector('#pesquisaCampanhas');
-  template5 = e.querySelector('#campanhas');
   templateHome = e.querySelector('#home');
-  templateLogar = e.querySelector('#logar');
   templateDeslogar = e.querySelector('#deslogar');
   menu1 = e.querySelector('#menu1');
   menu2 = e.querySelector('#menu2');
-  visualiza = e.querySelector('#visualizaCampanha');
   resultadoPesquisa = e.querySelector('#resultadoPesquisa');
   viewCampanha= e.querySelector('#campanha');
   templatePerfil = e.querySelector('#perfil');
@@ -29,6 +31,9 @@ async function fetch_templates() {
   salvarAlteracao = e.querySelector('#salvarAlteracao');
 }
 
+/**
+ * Funcao que carrega a view do menu quando o usuario esta deslogado
+ */
 export async function viewMenu1(){
     let data = await Promise.resolve(fetch_templates());
 
@@ -36,6 +41,9 @@ export async function viewMenu1(){
     $menu.innerHTML = $template.innerHTML;
 }
 
+/**
+ * Funcao que carrega a view do menu quando o usuario esta logado
+ */
 export async function viewMenu2(){
     let data = await Promise.resolve(fetch_templates());
 
@@ -43,6 +51,9 @@ export async function viewMenu2(){
     $menu.innerHTML = $template.innerHTML;
 }
 
+/**
+ * Funcao que carrega a view de deslogar
+ */
 export async function viewDeslogar(){
     let data = await Promise.resolve(fetch_templates());
 
@@ -53,11 +64,17 @@ export async function viewDeslogar(){
     $loginButton.addEventListener('click', deslogar);
 }
 
+/**
+ * Funcao que limpa o localStorage
+ */
 function deslogar(){
     localStorage.clear();
     view5();
 }
 
+/**
+ * Funcao que carrega a view home
+ */
 export async function view5(){
     let data = await Promise.resolve(fetch_templates());
     location.hash = "#/home";
@@ -131,10 +148,13 @@ export async function view5(){
     });
 }
 
+/**
+ * Funcao que carrega a view do login
+ */
 export async function view2() {
     let data = await Promise.resolve(fetch_templates());
     location.hash = "#/login";
-    localStorage.setItem('atributo', 'meta');
+    // localStorage.setItem('atributo', 'meta');
     let $template = template2;
     $main.innerHTML = $template.innerHTML;
 
@@ -162,6 +182,9 @@ export async function view2() {
         );
 }
 
+/**
+ * Funcao que carrega a view de pesquisa
+ */
 export async function view4(){
     let data = await Promise.resolve(fetch_templates());
     location.hash = "#/pesquisaCampanhas";
@@ -189,6 +212,11 @@ export async function view4(){
     );
 }
 
+/**
+ * Carrega as Campanhas na tabela de resultados
+ * @param dado as o array com as Campanhas
+ * @param arg uma variavel para verificar se a tabela ja esta presente no template
+ */
 export async function viewResultadoPesquisa(dado,arg){
     if(arg==0){
         $main.innerHTML+= resultadoPesquisa.innerHTML;
@@ -232,6 +260,9 @@ export async function viewResultadoPesquisa(dado,arg){
 
 }
 
+/**
+ * Funcao que carrega a view de cadastro de usuarios
+ */
 export async function view1(){
     let data = await Promise.resolve(fetch_templates());
     location.hash = "#/cadastro";
@@ -262,6 +293,9 @@ export async function view1(){
         );
 }
 
+/**
+ * Funcao que carrega a view de confirmacao de cadastro realizado
+ */
 async function cadastroRealizado(){
     let data = await Promise.resolve(fetch_templates());
     let $template = cadastroDeUsuariosRealizado;
@@ -272,6 +306,9 @@ async function cadastroRealizado(){
         });
 }
 
+/**
+ * Funcao que carrega a view de cadastro de campanhas
+ */
 export async function view3(){
     let data = await Promise.resolve(fetch_templates());
     location.hash = "#/cadastroCampanha";
@@ -302,6 +339,9 @@ export async function view3(){
 
     document.querySelector('#cData').min = hoje;
 
+    /**
+     * Botao de confirmacao de cadastro
+     */
     let $cadastraButton = document.querySelector("#newButton");
     $cadastraButton.addEventListener('click', 
         async function cadastraCampanha(){
@@ -325,6 +365,10 @@ export async function view3(){
     );
 }
 
+/**
+ * Funcao que carrega a view de visualizacao da campanha
+ * @param url a url da campanha que sera recuperada
+ */
 export async function campanha(url){
     let data = await Promise.resolve(fetch_templates());
 
@@ -347,6 +391,9 @@ export async function campanha(url){
             $habilitarEdicao.innerHTML+=$salvarAlteracao.innerHTML;
             $main.innerHTML = $habilitarEdicao.innerHTML;
 
+            /**
+             * Botao de editar a campanha
+             */
             let $editButton= document.querySelector('#editButton');
             $editButton.addEventListener('click', function editarDescricao(){
                 alert('Descrição Agora Pode Ser Alterada, Você Pode Salvar Sua Alteração no Final da Página.');
@@ -387,6 +434,9 @@ export async function campanha(url){
         let cLike = document.querySelector('#cLike');
         cLike.value = dado.likes.length;
 
+        /**
+         * Botao de dar Like em uma Campanha
+         */
         let $likeButtom = document.querySelector("#like");
         $likeButtom.addEventListener('click', 
             async function darLike(){
@@ -401,6 +451,9 @@ export async function campanha(url){
                 }
         });
 
+        /**
+         * Botao de realizar doacao
+         */
         let doacaoButton = document.querySelector('#doacaoButton');
         doacaoButton.addEventListener('click',
             async function realizarDoacao(){
@@ -408,6 +461,9 @@ export async function campanha(url){
                 let divDoacao = document.querySelector('#divDoacao');
                 divDoacao.innerHTML = templateDoacao.innerHTML;
 
+                /**
+                * Botao de confirmar doacao
+                */
                 let buttonEnviar = document.querySelector('#donation');
                 buttonEnviar.addEventListener('click', 
                     async function enviarDoacao(){
@@ -436,11 +492,18 @@ export async function campanha(url){
                 )
             }
         );
+
+        /**
+         * Botao de encerrar a campanha
+         */
         let enceraButton = document.querySelector('#cEncerrar');
         enceraButton.addEventListener('click', function encerrar(){
             deletar(dado);
         })
 
+        /**
+         * Botao de comentario da Campanha, abre uma caixa de texto para digitar o comentario
+         */
         let $comentarioButtom = document.querySelector("#comentarioButtom");
         $comentarioButtom.addEventListener('click',
             async function escreverComentario(){
@@ -448,6 +511,10 @@ export async function campanha(url){
                 let novoComentario = document.querySelector('#formato_novo_comentario');
                 espacoComentario.innerHTML += novoComentario.innerHTML;
                 $comentarioButtom.removeEventListener('click', escreverComentario);
+
+                /**
+                * Botao de enviar comentario
+                */
                 let $Button = document.querySelector('#enviar_comentario');
                 $Button.addEventListener('click', 
                     async function enviarComentario(){
@@ -464,6 +531,9 @@ export async function campanha(url){
                     }
                 )  
         });
+        /**
+         * Carrega os comentarios no final da pagina
+         */
         let array = dado.hashcomentarios;
         let espacoComentario = document.querySelector('#espacoComentario');
         if(array.length>0){
@@ -480,9 +550,13 @@ export async function campanha(url){
     }
 }
 
+/**
+ * Funcao de encerrar a campanha
+ * @param dado a campanha a ser encerrada
+ */
 async function deletar(dado){
     let id = dado.id;
-    let reposta = await fetch(URI + `//api/campanhas/encerar/${id}`, {
+    let reposta = await fetch(URI + `/api/campanhas/encerar/${id}`, {
         'method':'PUT',
         'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
     })
@@ -494,6 +568,11 @@ async function deletar(dado){
     }
 }
 
+/**
+ * Funcao que carrega os comentarios dos comentarios de maneira recursiva
+ * @param div_comentario a div onde sera inserido os comentarios 
+ * @param respostas o array com os comentarios
+ */
 async function visualizacaoRecursiva(div_comentario,respostas){
     if(respostas.length>0){
         respostas.forEach(newComentario => {
@@ -505,6 +584,10 @@ async function visualizacaoRecursiva(div_comentario,respostas){
     return div_comentario;
 }
 
+/**
+ * Funcao que cria o objeto Comentario 
+ * @param comentario o comentario a ser criado
+ */
 function criaComentario(comentario){
 	let newTemplate = document.querySelector('#comentario');
 	let caixa_comentario = document.createElement('div');
@@ -520,10 +603,19 @@ function criaComentario(comentario){
     c.textoComentario = c.caixa.children[1];
     c.botoes = c.caixa.children[3];
 
+    /**
+     * Preenche as informacoes do comentario
+     */
     function preenche(){
-		c.email.innerText = "user: " + comentario.usuario.email;
-        c.textoComentario.innerHTML = comentario.comentario;
-        c.botaoEnviarComentario = c.botoes.children[0];
+        if(comentario.comentario==""){
+            c.email.innerText = "user: " + comentario.usuario.email;
+            c.textoComentario.innerHTML = 'comentario apagado';
+            c.botaoEnviarComentario = c.botoes.children[0];
+        }else{
+            c.email.innerText = "user: " + comentario.usuario.email;
+            c.textoComentario.innerHTML = comentario.comentario;
+            c.botaoEnviarComentario = c.botoes.children[0];
+        }
     };
     preenche();
 
@@ -535,6 +627,9 @@ function criaComentario(comentario){
 
         let idComentario = c.objetoComentario.id;
 
+        /**
+         * Deleta o comentario feito pelo Usuario
+         */
         c.botaoDeletarComentario.addEventListener('click', 
             async function fetch_cadastro_usuario(){
                 let resposta = await fetch(URI + `/apagarComentario/${idComentario}/`,{
@@ -551,12 +646,18 @@ function criaComentario(comentario){
         );
     }
 
+    /**
+     * Envia o Comentario feito no proprio comentario
+     */
     c.botaoEnviarComentario.addEventListener('click', 
     async function escreverComentario(){
         let espacoComentario = c.caixa;
         let novoComentario = document.querySelector('#formato_novo_comentario');
         espacoComentario.innerHTML += novoComentario.innerHTML;
 
+        /**
+         * Envia o Comentario
+         */
         let buttonEnviar = document.querySelector('#enviar_comentario');
         buttonEnviar.addEventListener('click', 
         async function enviarComentario(){
@@ -577,6 +678,10 @@ function criaComentario(comentario){
     return c;
 }
 
+/**
+ * Funcao que carrega a view do Perfil do Usuario
+ * @param email o email do Usuario
+ */
 export async function perfil(email){
     let data = await Promise.resolve(fetch_templates());
     location.hash = `#/usuario/${email}`;
@@ -584,7 +689,7 @@ export async function perfil(email){
     let $template = templatePerfil;
         $main.innerHTML = $template.innerHTML;
 
-    let resposta = await fetch(URI + `//usuarios/${email}`, {
+    let resposta = await fetch(URI + `/usuarios/${email}`, {
         'method': 'GET',
         'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
     })
@@ -619,6 +724,10 @@ export async function perfil(email){
     }
 }
 
+/**
+ * Funcao que gera a url a partir do nome da campanha
+ * @param text a string com o nome da campanha 
+ */
 function createURL (text){     
     text = text.toLowerCase();                                                           
     text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');

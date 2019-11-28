@@ -1,7 +1,13 @@
 import * as app from "/app.js";
-let URI = 'https://teste31102001.herokuapp.com';
-// let URI = 'http://localhost:8080'
 
+/**
+ * URI da aplicacao backend
+ */
+let URI = 'https://teste31102001.herokuapp.com';
+
+/**
+ * Funcao que redireciona para a view correta a partir da url
+ */
 function roteamento(){
     geraMenu();
     let hash = location.hash;
@@ -39,6 +45,10 @@ function roteamento(){
     }    
 }
 
+
+/**
+ * Verifica se o Usuario esta logado ou nao e gera o menu adequado
+ */
 async function geraMenu(){
     let resposta = await fetch(URI + "/api", {
         'method':'GET',
@@ -52,7 +62,9 @@ async function geraMenu(){
             
     }
 
-
+/**
+ * Verifica se o Usuario esta logado antes de mostrar a view de logout
+ */
 async function teste(){
     let resposta = await fetch(URI + "/api", {
     'method':'GET',
