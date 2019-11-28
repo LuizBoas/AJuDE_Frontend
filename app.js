@@ -1,6 +1,6 @@
 let $main = document.querySelector('#main');
 let $menu = document.querySelector('#menu');
-let URI = 'http://localhost:8080';
+let URI = 'https://teste31102001.herokuapp.com';
 // https://teste31102001.herokuapp.com
 
 let cadastroDeUsuariosRealizado, salvarAlteracao,habilitarEdicao, templatePerfil, resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha, newButton;
