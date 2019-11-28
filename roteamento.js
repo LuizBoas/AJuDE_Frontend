@@ -1,5 +1,6 @@
 import * as app from "/app.js";
 let URI = 'https://teste31102001.herokuapp.com';
+// let URI = 'http://localhost:8080'
 
 function roteamento(){
     geraMenu();
@@ -10,7 +11,6 @@ function roteamento(){
         app.perfil(linkUsuario);
     }else if(link.includes("/campanha/")){
         let linkCampanha = link.substr(10);
-        // console.log(linkCampanha);
         app.campanha(linkCampanha);
     }else{
         switch(link){
@@ -39,38 +39,30 @@ function roteamento(){
     }    
 }
 
-function geraMenu(){
-    fetch(URI + "/api", {
+async function geraMenu(){
+    let resposta = await fetch(URI + "/api", {
         'method':'GET',
         'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
         })
-        .then(r => { 
-            if(r.status==200){
-                app.viewMenu2();
-
-            }else{
-                app.viewMenu1();
-            }
-            
+        if(resposta.status==200){
+            app.viewMenu2();
+        }else{
+            app.viewMenu1();
         }
-    );
-}
+            
+    }
 
-function teste(){
-    fetch(URI + "/api", {
+
+async function teste(){
+    let resposta = await fetch(URI + "/api", {
     'method':'GET',
     'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
     })
-    .then(r => { 
-                if(r.status==200){
-                    app.viewDeslogar(); 
-
-                }else{
-                    app.view2();
-                }
-                
-            }
-        );
+    if(resposta.status==200){
+            app.viewDeslogar(); 
+    }else{
+        app.view2();
+    }             
 };
 
 roteamento();

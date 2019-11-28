@@ -1,7 +1,7 @@
 let $main = document.querySelector('#main');
 let $menu = document.querySelector('#menu');
 let URI = 'https://teste31102001.herokuapp.com';
-// https://teste31102001.herokuapp.com
+// let URI = 'http://localhost:8080'
 
 let cadastroDeUsuariosRealizado, salvarAlteracao,habilitarEdicao, templatePerfil, resultadoPesquisa, template1, template2, template3, template4, template5, templateHome, templateLogar, templateDeslogar, menu1, menu2, visualiza, viewCampanha, newButton;
 
@@ -253,7 +253,7 @@ export async function view1(){
                     "cartaoCredito": "${cartaoCredito.value}","senha": "${senha.value}" }`,
                     'headers': {'Content-Type': 'application/json'}
                 })
-                if(resposta.status==200){
+                if(resposta.status==201){
                     cadastroRealizado();
                 }else{
                     alert("Email Em Uso");
@@ -313,13 +313,13 @@ export async function view3(){
                 "meta": metaCampanha.value,"data": dataCampanha.value,"url": urlCampanha, "email": localStorage.getItem('email')}),
                 'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
             })
-            if(resposta.status==200){
-                alert(`Capanha Criada, compartilhe sua campanha: localhost:8000/#/campanha/${urlCampanha}`);
+            if(resposta.status==201){
+                alert(`Capanha Criada, compartilhe sua campanha: https://eager-curran-593cc1.netlify.com/#/campanha/${urlCampanha}`);
                 campanha(urlCampanha);
-            }else if(resposta.status==500){
+            }else if(resposta.status==409){
                 alert("Erro ao Criar a Campanha, Nome de Camapanha Já Cadastrado");
             }else{
-                alert("Erro ao criar a Campanha");
+                alert("Solicitação Inválida!");
             }
         }
     );
@@ -420,7 +420,7 @@ export async function campanha(url){
                             'body': `{"valor": ${valorDoacao.value}, "idCampanha": ${dado.id}, "data" : "${hoje}"}`,
                             'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
                         });
-                        if(resposta2.status==200){
+                        if(resposta2.status==201){
                             let dadoDoacao = await resposta2.json();
                             alert('DOACAO REALIZADA');
                             if(localStorage.getItem('quantia')<dadoDoacao.meta){
@@ -457,7 +457,7 @@ export async function campanha(url){
                             'body':`{"idCampanha": "${dado.id}","comentario": "${novo_texto.value}","email": "${localStorage.getItem('email')}" }`,
                             'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
                         })
-                        if(resposta3.status==200){
+                        if(resposta3.status==201){
                             alert("Seu comentário foi registrado!");
                         }
                         campanha(url);
@@ -495,7 +495,6 @@ async function deletar(dado){
 }
 
 async function visualizacaoRecursiva(div_comentario,respostas){
-    // console.log(respostas)
     if(respostas.length>0){
         respostas.forEach(newComentario => {
             let div_reposta = criaComentario(newComentario);
@@ -567,7 +566,7 @@ function criaComentario(comentario){
                 'body':`{"idCampanha": "${comentario.id}","comentario": "${novo_texto.value}","email": "${localStorage.getItem('email')}" }`,
                 'headers': {'Content-Type': 'application/json', "Authorization": `Bearer ${localStorage.token}`}
                 })
-            if(resposta3.status==200){
+            if(resposta3.status==201){
                 alert("Seu comentário foi registrado!");
                 campanha(localStorage.getItem('hash'));
                 }
